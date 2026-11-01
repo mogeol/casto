@@ -126,9 +126,23 @@ Casto is completely **free, open-source, and privacy-respecting** without any tr
 
 If Casto makes managing your TV or remote devices easier and you'd like to support continued development and maintenance:
 
-- 💖 **GitHub Sponsors**: [Sponsor on GitHub](https://github.com/sponsors/mogeol)
-- ☕ **Buy Me a Coffee**: [Buy Me a Coffee](https://buymeacoffee.com/mogeol)
-- 💳 **PayPal**: [Donate via PayPal](https://paypal.me)
+<div align="center">
+
+### 支付宝扫一扫 (Alipay)
+
+<a href="https://qr.alipay.com/fkx15004n444xvwknxa61c5">
+  <img src="alipay_donation_qr.png" width="220" alt="Alipay QR Code" />
+</a>
+
+<p>
+  <i>手机可直接点击上方二维码或使用支付宝 App 扫码支持</i><br>
+  <b><a href="https://qr.alipay.com/fkx15004n444xvwknxa61c5">👉 点击通过支付宝支持 (Alipay Link)</a></b>
+</p>
+
+### International Support (PayPal)
+**[💳 Donate via PayPal (paypal.me)](https://paypal.me)**
+
+</div>
 
 Thank you for your support! 🙌
 
