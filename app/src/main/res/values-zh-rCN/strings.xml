@@ -101,7 +101,11 @@
     <string name="screenshot_save_gallery">保存到相册</string>
     <string name="screenshot_share">分享</string>
     <string name="screenshot_saved_toast">截图已成功保存到相册</string>
-    <string name="about_title">关于 Casto 与赞助</string>
+    <string name="about_title">关于 Casto</string>
+    <string name="support_title">支持与赞助</string>
+    <string name="support_subtitle">开源独立开发支持</string>
+    <string name="about_support_btn">支持与赞助 ❤️</string>
+    <string name="about_author">开发者：mogeol</string>
     <string name="about_open_source">开源协议 (Apache 2.0)</string>
     <string name="about_open_source_desc">基于纯 Kotlin ADB (dadb) 与 scrcpy-server 构建。完全开源、零跟踪、无广告。</string>
     <string name="about_github_btn">访问 GitHub 仓库</string>

@@ -101,7 +101,11 @@
     <string name="screenshot_save_gallery">写真に保存</string>
     <string name="screenshot_share">共有</string>
     <string name="screenshot_saved_toast">ギャラリーに保存しました</string>
-    <string name="about_title">Castoについて・サポート</string>
+    <string name="about_title">Casto について</string>
+    <string name="support_title">サポートと寄付</string>
+    <string name="support_subtitle">オープンソース開発支援</string>
+    <string name="about_support_btn">サポートと寄付 ❤️</string>
+    <string name="about_author">開発者: mogeol</string>
     <string name="about_open_source">オープンソース (Apache 2.0)</string>
     <string name="about_open_source_desc">純粋なKotlin ADB (dadb) と scrcpy-server を採用。完全オープンソース、追跡・広告一切なし。</string>
     <string name="about_github_btn">GitHubで見る</string>

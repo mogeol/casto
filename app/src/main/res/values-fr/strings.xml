@@ -101,7 +101,11 @@
     <string name="screenshot_save_gallery">Enregistrer dans Photos</string>
     <string name="screenshot_share">Partager</string>
     <string name="screenshot_saved_toast">Capture enregistrée dans la galerie</string>
-    <string name="about_title">À propos de Casto &amp; Soutien</string>
+    <string name="about_title">À propos de Casto</string>
+    <string name="support_title">Soutien et dons</string>
+    <string name="support_subtitle">Soutien au code source libre</string>
+    <string name="about_support_btn">Soutien et dons ❤️</string>
+    <string name="about_author">Développeur: mogeol</string>
     <string name="about_open_source">Open Source (Apache 2.0)</string>
     <string name="about_open_source_desc">Développé avec Kotlin ADB (dadb) et scrcpy-server. Totalement open-source, sans traceurs ni publicités.</string>
     <string name="about_github_btn">Voir sur GitHub</string>

@@ -101,7 +101,11 @@
     <string name="screenshot_save_gallery">Save to Photos</string>
     <string name="screenshot_share">Share</string>
     <string name="screenshot_saved_toast">Screenshot saved to gallery</string>
-    <string name="about_title">About Casto &amp; Support</string>
+    <string name="about_title">About Casto</string>
+    <string name="support_title">Support &amp; Donate</string>
+    <string name="support_subtitle">Open Source Project Support</string>
+    <string name="about_support_btn">Support &amp; Donate ❤️</string>
+    <string name="about_author">Developer: mogeol</string>
     <string name="about_open_source">Open Source (Apache 2.0)</string>
     <string name="about_open_source_desc">Powered by pure Kotlin ADB (dadb) and scrcpy-server. Fully open-source with zero trackers and zero ads.</string>
     <string name="about_github_btn">View on GitHub</string>

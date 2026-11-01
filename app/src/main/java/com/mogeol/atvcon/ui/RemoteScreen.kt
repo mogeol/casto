@@ -94,6 +94,7 @@ fun RemoteScreen(
     var showPowerMenu by remember { mutableStateOf(false) }
     var pendingPowerAction by remember { mutableStateOf<PowerAction?>(null) }
     var showAboutDialog by remember { mutableStateOf(false) }
+    var showSupportDialog by remember { mutableStateOf(false) }
 
     // Synchronize activity orientation and immersive system bars with mirror fullscreen
     LaunchedEffect(isScreenFullscreen, isRemoteLandscape) {
@@ -330,6 +331,20 @@ fun RemoteScreen(
                                 DropdownMenuItem(
                                     text = {
                                         Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(Icons.Default.Favorite, contentDescription = null, tint = Color(0xFFFF5252), modifier = Modifier.size(16.dp))
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(stringResource(R.string.support_title), color = Color.White, fontSize = 13.sp)
+                                        }
+                                    },
+                                    onClick = {
+                                        hostDropdownExpanded = false
+                                        showSupportDialog = true
+                                    }
+                                )
+
+                                DropdownMenuItem(
+                                    text = {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
                                             Icon(Icons.Default.Info, contentDescription = null, tint = AccentCyan, modifier = Modifier.size(16.dp))
                                             Spacer(modifier = Modifier.width(8.dp))
                                             Text(stringResource(R.string.about_title), color = Color.White, fontSize = 13.sp)
@@ -381,23 +396,36 @@ fun RemoteScreen(
                         }
                     }
 
-                    // Right: Action Cluster (Screen, Screenshot, Send Link, Settings, Power)
+                    // Right: Action Cluster (Support, Screen, Screenshot, Send Link, Settings, Power)
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(2.dp)
+                        horizontalArrangement = Arrangement.spacedBy(1.dp)
                     ) {
+                        // Support & Donation Dialog Shortcut
+                        IconButton(
+                            onClick = { showSupportDialog = true },
+                            modifier = Modifier.size(34.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Favorite,
+                                contentDescription = stringResource(R.string.support_title),
+                                tint = Color(0xFFFF5252),
+                                modifier = Modifier.size(19.dp)
+                            )
+                        }
+
                         // Fast Jump to Screen Mirror Tab
                         IconButton(
                             onClick = {
                                 selectedTab = RemoteTab.SCREEN
                             },
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier.size(34.dp)
                         ) {
                             Icon(
                                 Icons.Default.Tv,
                                 contentDescription = stringResource(R.string.action_screen_mirror),
                                 tint = if (selectedTab == RemoteTab.SCREEN) AccentCyan else Color.White,
-                                modifier = Modifier.size(20.dp)
+                                modifier = Modifier.size(19.dp)
                             )
                         }
 
@@ -416,12 +444,12 @@ fun RemoteScreen(
                                 }
                             },
                             enabled = !isTakingScreenshot && connectionState is ConnectionState.Connected,
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier.size(34.dp)
                         ) {
                             if (isTakingScreenshot) {
-                                CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp, color = Color.White)
+                                CircularProgressIndicator(modifier = Modifier.size(15.dp), strokeWidth = 2.dp, color = Color.White)
                             } else {
-                                Icon(Icons.Default.CameraAlt, contentDescription = stringResource(R.string.action_screenshot), tint = Color.White, modifier = Modifier.size(20.dp))
+                                Icon(Icons.Default.CameraAlt, contentDescription = stringResource(R.string.action_screenshot), tint = Color.White, modifier = Modifier.size(19.dp))
                             }
                         }
 
@@ -431,9 +459,9 @@ fun RemoteScreen(
                                 linkToLaunch = ""
                                 showSendLinkDialog = true
                             },
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier.size(34.dp)
                         ) {
-                            Icon(Icons.Default.Link, contentDescription = stringResource(R.string.action_send_link), tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.Link, contentDescription = stringResource(R.string.action_send_link), tint = Color.White, modifier = Modifier.size(19.dp))
                         }
 
                         // Settings Button (Moved next to Power!)
@@ -447,22 +475,22 @@ fun RemoteScreen(
                                     }
                                 }
                             },
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier.size(34.dp)
                         ) {
-                            Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.action_tv_settings), tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.action_tv_settings), tint = Color.White, modifier = Modifier.size(19.dp))
                         }
 
                         // Power Button with Pop-out Menu
                         Box {
                             IconButton(
                                 onClick = { showPowerMenu = true },
-                                modifier = Modifier.size(36.dp)
+                                modifier = Modifier.size(34.dp)
                             ) {
                                 Icon(
                                     Icons.Default.PowerSettingsNew,
                                     contentDescription = stringResource(R.string.action_power_menu),
                                     tint = AccentRed,
-                                    modifier = Modifier.size(20.dp)
+                                    modifier = Modifier.size(19.dp)
                                 )
                             }
 
@@ -1193,6 +1221,16 @@ fun RemoteScreen(
     }
 
     if (showAboutDialog) {
-        AboutDialog(onDismissRequest = { showAboutDialog = false })
+        AboutDialog(
+            onDismissRequest = { showAboutDialog = false },
+            onOpenSupport = {
+                showAboutDialog = false
+                showSupportDialog = true
+            }
+        )
+    }
+
+    if (showSupportDialog) {
+        SupportDialog(onDismissRequest = { showSupportDialog = false })
     }
 }

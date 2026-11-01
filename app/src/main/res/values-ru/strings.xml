@@ -101,7 +101,11 @@
     <string name="screenshot_save_gallery">Сохранить в галерею</string>
     <string name="screenshot_share">Поделиться</string>
     <string name="screenshot_saved_toast">Скриншот сохранен в галерее</string>
-    <string name="about_title">О Casto и поддержка</string>
+    <string name="about_title">О Casto</string>
+    <string name="support_title">Поддержка и донат</string>
+    <string name="support_subtitle">Поддержка опенсорса</string>
+    <string name="about_support_btn">Поддержка и донат ❤️</string>
+    <string name="about_author">Разработчик: mogeol</string>
     <string name="about_open_source">Открытый исходный код (Apache 2.0)</string>
     <string name="about_open_source_desc">На чистом Kotlin ADB (dadb) и scrcpy-server. Полностью открытый код, без слежки и рекламы.</string>
     <string name="about_github_btn">Репозиторий на GitHub</string>
