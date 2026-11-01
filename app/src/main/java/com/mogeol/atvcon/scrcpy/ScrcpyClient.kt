@@ -186,8 +186,13 @@ class ScrcpyClient {
                     val payload = ByteArray(packetSize)
                     source.readFully(payload)
 
-                    // Feed to MediaCodec
-                    val inIndex = decoder.dequeueInputBuffer(10_000L)
+                    // Feed to MediaCodec without dropping frames
+                    var inIndex = decoder.dequeueInputBuffer(10_000L)
+                    while (inIndex < 0 && isActive && isRunning) {
+                        drainOutputBuffers(decoder, bufferInfo, deviceName)
+                        inIndex = decoder.dequeueInputBuffer(10_000L)
+                    }
+
                     if (inIndex >= 0) {
                         val inBuffer = decoder.getInputBuffer(inIndex)
                         inBuffer?.clear()
@@ -206,28 +211,7 @@ class ScrcpyClient {
                     }
 
                     // Release decoded frames to Surface safely
-                    var outIndex = decoder.dequeueOutputBuffer(bufferInfo, 0L)
-                    while (outIndex >= 0 || outIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
-                        if (outIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
-                            val newFormat = decoder.outputFormat
-                            val newW = newFormat.getInteger(MediaFormat.KEY_WIDTH)
-                            val newH = newFormat.getInteger(MediaFormat.KEY_HEIGHT)
-                            if (newW > 0 && newH > 0 && (newW != videoWidth || newH != videoHeight)) {
-                                Log.d(TAG, "Video format changed dynamically: ${videoWidth}x${videoHeight} -> ${newW}x${newH}")
-                                videoWidth = newW
-                                videoHeight = newH
-                                _state.value = ScrcpyState.Connected(newW, newH, deviceName)
-                            }
-                        } else {
-                            val render = isSurfaceValid && (currentSurface?.isValid == true)
-                            try {
-                                decoder.releaseOutputBuffer(outIndex, render)
-                            } catch (e: Exception) {
-                                Log.w(TAG, "releaseOutputBuffer skipped during surface transition", e)
-                            }
-                        }
-                        outIndex = decoder.dequeueOutputBuffer(bufferInfo, 0L)
-                    }
+                    drainOutputBuffers(decoder, bufferInfo, deviceName)
                 }
             } catch (e: Exception) {
                 if (isRunning) {
@@ -237,6 +221,31 @@ class ScrcpyClient {
             } finally {
                 cleanup()
             }
+        }
+    }
+
+    private fun drainOutputBuffers(decoder: MediaCodec, bufferInfo: MediaCodec.BufferInfo, deviceName: String) {
+        var outIndex = decoder.dequeueOutputBuffer(bufferInfo, 0L)
+        while (outIndex >= 0 || outIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
+            if (outIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
+                val newFormat = decoder.outputFormat
+                val newW = newFormat.getInteger(MediaFormat.KEY_WIDTH)
+                val newH = newFormat.getInteger(MediaFormat.KEY_HEIGHT)
+                if (newW > 0 && newH > 0 && (newW != videoWidth || newH != videoHeight)) {
+                    Log.d(TAG, "Video format changed dynamically: ${videoWidth}x${videoHeight} -> ${newW}x${newH}")
+                    videoWidth = newW
+                    videoHeight = newH
+                    _state.value = ScrcpyState.Connected(newW, newH, deviceName)
+                }
+            } else {
+                val render = isSurfaceValid && (currentSurface?.isValid == true)
+                try {
+                    decoder.releaseOutputBuffer(outIndex, render)
+                } catch (e: Exception) {
+                    Log.w(TAG, "releaseOutputBuffer skipped during surface transition", e)
+                }
+            }
+            outIndex = decoder.dequeueOutputBuffer(bufferInfo, 0L)
         }
     }
 

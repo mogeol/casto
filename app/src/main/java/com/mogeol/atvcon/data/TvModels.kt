@@ -54,7 +54,7 @@ enum class RemoteTab(val title: String, @StringRes val titleRes: Int) {
 data class MirrorQuality(
     val maxSize: Int = 1280,
     val bitRate: Int = 4_000_000,
-    val maxFps: Int = 60
+    val maxFps: Int = 30
 ) {
     val resolutionLabel: String
         get() = when {
@@ -77,7 +77,7 @@ class MirrorQualityManager(context: Context) {
         get() {
             val size = prefs.getInt("max_size", 1280)
             val bitRate = prefs.getInt("bit_rate", 4_000_000)
-            val fps = prefs.getInt("max_fps", 60)
+            val fps = prefs.getInt("max_fps", 30)
             return MirrorQuality(maxSize = size, bitRate = bitRate, maxFps = fps)
         }
         set(value) {

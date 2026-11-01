@@ -141,8 +141,8 @@ fun QualitySettingsDialog(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         listOf(
-                            60 to "60 FPS (Fluid)",
-                            30 to "30 FPS (Battery Saver)"
+                            30 to "30 FPS (TV Box / Smooth)",
+                            60 to "60 FPS (High-End Devices)"
                         ).forEach { (fps, label) ->
                             val isSelected = selectedFps == fps
                             Surface(
