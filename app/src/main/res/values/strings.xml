@@ -107,9 +107,12 @@
     <string name="about_github_btn">View on GitHub</string>
     <string name="about_donation_title">Support &amp; Donations</string>
     <string name="about_donation_desc">Casto is developed as a passionate open-source project. If it makes your TV experience smoother, voluntary donations keep active development alive!</string>
-    <string name="about_alipay_btn">Alipay Support / 支付宝支持</string>
-    <string name="about_alipay_qr_btn">View QR Code / 收款码</string>
+    <string name="about_alipay_btn">Alipay (支付宝)</string>
+    <string name="about_alipay_qr_btn">Alipay QR</string>
     <string name="about_paypal_btn">PayPal</string>
-    <string name="about_alipay_modal_title">Alipay Donation / 支付宝赞助</string>
-    <string name="about_alipay_modal_jump">Open Alipay App / 跳转至支付宝</string>
+    <string name="about_alipay_modal_title">Alipay Donation</string>
+    <string name="about_alipay_modal_jump">Open in Alipay</string>
+    <string name="files_download_subtitle">Save to phone\'s Download / Pictures storage</string>
+    <string name="files_share">Share File</string>
+    <string name="files_share_subtitle">Send or share via WeChat and other apps</string>
 </resources>

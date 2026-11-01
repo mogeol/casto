@@ -107,9 +107,12 @@
     <string name="about_github_btn">Voir sur GitHub</string>
     <string name="about_donation_title">Soutien et dons</string>
     <string name="about_donation_desc">Casto est un projet open-source passionné. Si l\'application vous simplifie la vie, vos dons volontaires contribuent à sa maintenance !</string>
-    <string name="about_alipay_btn">Alipay / 支付宝</string>
-    <string name="about_alipay_qr_btn">Afficher le QR code</string>
+    <string name="about_alipay_btn">Alipay (支付宝)</string>
+    <string name="about_alipay_qr_btn">Alipay QR</string>
     <string name="about_paypal_btn">PayPal</string>
-    <string name="about_alipay_modal_title">Don via Alipay</string>
-    <string name="about_alipay_modal_jump">Ouvrir dans l\'application Alipay</string>
+    <string name="about_alipay_modal_title">Don Alipay</string>
+    <string name="about_alipay_modal_jump">Ouvrir dans Alipay</string>
+    <string name="files_download_subtitle">Enregistrer dans Téléchargements / Photos</string>
+    <string name="files_share">Partager le fichier</string>
+    <string name="files_share_subtitle">Envoyer via WeChat ou d\'autres applications</string>
 </resources>

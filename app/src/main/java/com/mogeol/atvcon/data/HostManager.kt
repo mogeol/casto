@@ -45,6 +45,6 @@ class HostManager(context: Context) {
         private const val PREFS_NAME = "atvcon_hosts_prefs"
         private const val KEY_LAST_HOST = "last_connected_host"
         private const val KEY_HISTORY_HOSTS = "history_hosts_list"
-        private const val DEFAULT_HOST = "192.168.5.3"
+        private const val DEFAULT_HOST = "192.168.1.10"
     }
 }

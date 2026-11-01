@@ -1,9 +1,16 @@
 package com.mogeol.atvcon.ui.components
 
+import android.content.ClipData
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
 import android.provider.OpenableColumns
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,7 +43,9 @@ import com.mogeol.atvcon.R
 import com.mogeol.atvcon.adb.TvRemoteManager
 import com.mogeol.atvcon.data.TvFileItem
 import com.mogeol.atvcon.ui.theme.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 
@@ -305,7 +314,7 @@ fun FileBrowserSheet(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Download / Pull to phone
+                    // Download / Save to phone
                     if (!selectedItem.isDirectory) {
                         Surface(
                             shape = RoundedCornerShape(8.dp),
@@ -317,13 +326,18 @@ fun FileBrowserSheet(
                                     selectedFileItem = null
                                     coroutineScope.launch {
                                         transferStatus = "Downloading ${item.name} from TV..."
-                                        val destDir = File(context.cacheDir, "downloads").apply { mkdirs() }
-                                        val destFile = File(destDir, item.name)
+                                        val tempCacheDir = File(context.cacheDir, "downloads").apply { mkdirs() }
+                                        val tempCacheFile = File(tempCacheDir, item.name)
 
-                                        remoteManager.pullFile(item.path, destFile).onSuccess { downloaded ->
+                                        remoteManager.pullFile(item.path, tempCacheFile).onSuccess { downloaded ->
                                             transferStatus = null
-                                            Toast.makeText(context, "Downloaded ${item.name}", Toast.LENGTH_SHORT).show()
-                                            shareDownloadedFile(context, downloaded)
+                                            val savedLocation = saveFileToPhoneStorage(context, downloaded, item.name)
+                                            val msg = if (savedLocation != null) {
+                                                "Saved ${item.name} to $savedLocation"
+                                            } else {
+                                                "Downloaded ${item.name}"
+                                            }
+                                            Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
                                         }.onFailure { err ->
                                             transferStatus = null
                                             Toast.makeText(context, "Download failed: ${err.message}", Toast.LENGTH_SHORT).show()
@@ -339,7 +353,44 @@ fun FileBrowserSheet(
                                 Icon(Icons.Default.Download, contentDescription = null, tint = AccentCyan)
                                 Column {
                                     Text(stringResource(R.string.files_download), fontWeight = FontWeight.SemiBold, color = Color.White, fontSize = 13.sp)
-                                    Text("Download file to your local phone storage", fontSize = 11.sp, color = TextSecondary)
+                                    Text(stringResource(R.string.files_download_subtitle), fontSize = 11.sp, color = TextSecondary)
+                                }
+                            }
+                        }
+
+                        // Share file to other apps (WeChat, etc.)
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = DarkSurfaceVariant,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    val item = selectedItem
+                                    selectedFileItem = null
+                                    coroutineScope.launch {
+                                        transferStatus = "Preparing ${item.name}..."
+                                        val tempCacheDir = File(context.cacheDir, "downloads").apply { mkdirs() }
+                                        val tempCacheFile = File(tempCacheDir, item.name)
+
+                                        remoteManager.pullFile(item.path, tempCacheFile).onSuccess { downloaded ->
+                                            transferStatus = null
+                                            shareDownloadedFile(context, downloaded)
+                                        }.onFailure { err ->
+                                            transferStatus = null
+                                            Toast.makeText(context, "Share failed: ${err.message}", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                Icon(Icons.Default.Share, contentDescription = null, tint = AccentCyan)
+                                Column {
+                                    Text(stringResource(R.string.files_share), fontWeight = FontWeight.SemiBold, color = Color.White, fontSize = 13.sp)
+                                    Text(stringResource(R.string.files_share_subtitle), fontSize = 11.sp, color = TextSecondary)
                                 }
                             }
                         }
@@ -594,18 +645,98 @@ private fun getFileNameFromUri(context: Context, uri: Uri): String? {
     return name ?: uri.lastPathSegment
 }
 
+private suspend fun saveFileToPhoneStorage(context: Context, sourceFile: File, fileName: String): String? = withContext(Dispatchers.IO) {
+    try {
+        val ext = sourceFile.extension.lowercase()
+        val isImage = ext in listOf("png", "jpg", "jpeg", "webp", "gif", "bmp")
+        val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: when (ext) {
+            "png" -> "image/png"
+            "jpg", "jpeg" -> "image/jpeg"
+            "webp" -> "image/webp"
+            "gif" -> "image/gif"
+            "mp4" -> "video/mp4"
+            "apk" -> "application/vnd.android.package-archive"
+            "pdf" -> "application/pdf"
+            else -> "application/octet-stream"
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val contentValues = ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+                if (isImage) {
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/Casto")
+                } else {
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/Casto")
+                }
+                put(MediaStore.MediaColumns.IS_PENDING, 1)
+            }
+
+            val collection = if (isImage) {
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            } else {
+                MediaStore.Downloads.EXTERNAL_CONTENT_URI
+            }
+
+            val uri = context.contentResolver.insert(collection, contentValues)
+            if (uri != null) {
+                context.contentResolver.openOutputStream(uri)?.use { out ->
+                    sourceFile.inputStream().use { input ->
+                        input.copyTo(out)
+                    }
+                }
+                contentValues.clear()
+                contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
+                context.contentResolver.update(uri, contentValues, null, null)
+                return@withContext if (isImage) "Pictures/Casto" else "Download/Casto"
+            }
+        }
+
+        // Direct filesystem fallback for API < 29 or if MediaStore insert fails
+        val targetDir = if (isImage) {
+            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Casto")
+        } else {
+            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Casto")
+        }.apply { mkdirs() }
+
+        val targetFile = File(targetDir, fileName)
+        sourceFile.copyTo(targetFile, overwrite = true)
+        MediaScannerConnection.scanFile(context, arrayOf(targetFile.absolutePath), arrayOf(mimeType), null)
+        if (isImage) "Pictures/Casto" else "Download/Casto"
+    } catch (_: Exception) {
+        null
+    }
+}
+
 private fun shareDownloadedFile(context: Context, file: File) {
     try {
+        val ext = file.extension.lowercase()
+        val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: when (ext) {
+            "png" -> "image/png"
+            "jpg", "jpeg" -> "image/jpeg"
+            "webp" -> "image/webp"
+            "gif" -> "image/gif"
+            "mp4" -> "video/mp4"
+            "apk" -> "application/vnd.android.package-archive"
+            "pdf" -> "application/pdf"
+            "txt" -> "text/plain"
+            else -> "*/*"
+        }
         val uri = FileProvider.getUriForFile(
             context,
             "${context.packageName}.fileprovider",
             file
         )
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "*/*"
+            type = mimeType
             putExtra(Intent.EXTRA_STREAM, uri)
+            putExtra(Intent.EXTRA_TITLE, file.name)
+            putExtra(Intent.EXTRA_SUBJECT, file.name)
+            clipData = ClipData.newUri(context.contentResolver, file.name, uri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        context.startActivity(Intent.createChooser(shareIntent, "Share Downloaded File"))
-    } catch (_: Exception) {}
+        context.startActivity(Intent.createChooser(shareIntent, "Share ${file.name}"))
+    } catch (e: Exception) {
+        Toast.makeText(context, "Share failed: ${e.message}", Toast.LENGTH_SHORT).show()
+    }
 }

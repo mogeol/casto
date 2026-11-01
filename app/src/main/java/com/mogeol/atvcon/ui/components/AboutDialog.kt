@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -226,7 +227,14 @@ fun AboutDialog(
                         ) {
                             Icon(Icons.Default.AccountBalanceWallet, contentDescription = null, modifier = Modifier.size(15.dp))
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text(stringResource(R.string.about_alipay_btn), fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                            Text(
+                                text = stringResource(R.string.about_alipay_btn),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                softWrap = false
+                            )
                         }
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -246,7 +254,14 @@ fun AboutDialog(
                             ) {
                                 Icon(Icons.Default.QrCode2, contentDescription = null, modifier = Modifier.size(14.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text(stringResource(R.string.about_alipay_qr_btn), fontSize = 11.sp, fontWeight = FontWeight.Medium)
+                                Text(
+                                    text = stringResource(R.string.about_alipay_qr_btn),
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    softWrap = false
+                                )
                             }
 
                             // PayPal Button
@@ -267,7 +282,14 @@ fun AboutDialog(
                             ) {
                                 Icon(Icons.Default.Payment, contentDescription = null, modifier = Modifier.size(14.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text(stringResource(R.string.about_paypal_btn), fontSize = 11.sp, fontWeight = FontWeight.Medium)
+                                Text(
+                                    text = stringResource(R.string.about_paypal_btn),
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    softWrap = false
+                                )
                             }
                         }
                     }
@@ -342,7 +364,14 @@ fun AboutDialog(
                         ),
                         modifier = Modifier.fillMaxWidth().height(36.dp)
                     ) {
-                        Text(stringResource(R.string.about_alipay_modal_jump), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            text = stringResource(R.string.about_alipay_modal_jump),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            softWrap = false
+                        )
                     }
                 }
             }

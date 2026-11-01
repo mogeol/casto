@@ -108,8 +108,11 @@
     <string name="about_donation_title">支持与赞助</string>
     <string name="about_donation_desc">Casto 是一项用爱发电的开源项目。如果它提升了您的电视使用体验，您的自愿赞助将助力项目持续维护与新功能迭代！</string>
     <string name="about_alipay_btn">支付宝支持 / Alipay</string>
-    <string name="about_alipay_qr_btn">查看收款码</string>
+    <string name="about_alipay_qr_btn">收款码</string>
     <string name="about_paypal_btn">PayPal</string>
     <string name="about_alipay_modal_title">支付宝赞助</string>
     <string name="about_alipay_modal_jump">跳转至支付宝 App</string>
+    <string name="files_download_subtitle">直接保存到手机的下载或相册目录</string>
+    <string name="files_share">分享文件</string>
+    <string name="files_share_subtitle">发送或分享到微信及其他应用</string>
 </resources>

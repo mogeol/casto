@@ -1034,7 +1034,7 @@ fun RemoteScreen(
                     value = customIpInput,
                     onValueChange = { customIpInput = it },
                     singleLine = true,
-                    placeholder = { Text("e.g. 192.168.5.3", color = TextSecondary) },
+                    placeholder = { Text("e.g. 192.168.1.10", color = TextSecondary) },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = AccentCyan,
                         unfocusedBorderColor = Color.DarkGray,

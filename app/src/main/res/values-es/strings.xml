@@ -107,9 +107,12 @@
     <string name="about_github_btn">Ver en GitHub</string>
     <string name="about_donation_title">Soporte y donaciones</string>
     <string name="about_donation_desc">Casto es un proyecto de código abierto desarrollado con pasión. Si mejora tu experiencia con la TV, ¡tus donaciones voluntarias ayudan a mantenerlo activo!</string>
-    <string name="about_alipay_btn">Alipay / 支付宝</string>
-    <string name="about_alipay_qr_btn">Ver código QR</string>
+    <string name="about_alipay_btn">Alipay (支付宝)</string>
+    <string name="about_alipay_qr_btn">Alipay QR</string>
     <string name="about_paypal_btn">PayPal</string>
     <string name="about_alipay_modal_title">Donación con Alipay</string>
-    <string name="about_alipay_modal_jump">Abrir en la app Alipay</string>
+    <string name="about_alipay_modal_jump">Abrir en Alipay</string>
+    <string name="files_download_subtitle">Guardar en Descargas / Fotos del teléfono</string>
+    <string name="files_share">Compartir archivo</string>
+    <string name="files_share_subtitle">Enviar por WeChat u otras aplicaciones</string>
 </resources>
