@@ -140,7 +140,7 @@ If Casto makes managing your TV or remote devices easier and you'd like to suppo
 </p>
 
 ### International Support (PayPal)
-**[💳 Donate via PayPal (paypal.me)](https://paypal.me)**
+**[💳 Donate via PayPal (paypal.me/mogeol)](https://paypal.me/mogeol)**
 
 </div>
 
