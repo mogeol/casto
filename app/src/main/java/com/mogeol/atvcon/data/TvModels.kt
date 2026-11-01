@@ -141,7 +141,7 @@ enum class PowerAction(
 
 object AppConstants {
     const val APP_NAME = "Casto"
-    const val APP_VERSION = "1.0.0"
+    const val APP_VERSION = "1.1.0"
     const val GITHUB_REPO_URL = "https://github.com/mogeol/casto"
     const val ALIPAY_QR_URL = "https://qr.alipay.com/fkx15004n444xvwknxa61c5"
     const val ALIPAY_SCHEME_URL = "alipays://platformapi/startapp?saId=10000007&qrcode=https%3A%2F%2Fqr.alipay.com%2Ffkx15004n444xvwknxa61c5"
