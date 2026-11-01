@@ -31,6 +31,8 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
+import com.mogeol.atvcon.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -225,7 +227,7 @@ fun RemoteScreen(
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
                                     Text(
-                                        text = targetIp.ifBlank { "Select Host" },
+                                        text = targetIp.ifBlank { stringResource(R.string.select_host) },
                                         color = Color.White,
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.SemiBold
@@ -233,7 +235,7 @@ fun RemoteScreen(
                                     Spacer(modifier = Modifier.width(3.dp))
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
-                                        contentDescription = "Host Options",
+                                        contentDescription = stringResource(R.string.select_host),
                                         tint = TextSecondary,
                                         modifier = Modifier.size(16.dp)
                                     )
@@ -246,7 +248,7 @@ fun RemoteScreen(
                                 modifier = Modifier.background(DarkSurfaceVariant)
                             ) {
                                 Text(
-                                    text = "Saved Devices",
+                                    text = stringResource(R.string.saved_devices),
                                     fontSize = 11.sp,
                                     color = TextSecondary,
                                     fontWeight = FontWeight.Bold,
@@ -279,7 +281,7 @@ fun RemoteScreen(
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             Icon(Icons.Default.Add, contentDescription = null, tint = AccentCyan, modifier = Modifier.size(16.dp))
                                             Spacer(modifier = Modifier.width(8.dp))
-                                            Text("Enter Custom IP...", color = AccentCyan, fontSize = 13.sp)
+                                            Text(stringResource(R.string.custom_ip), color = AccentCyan, fontSize = 13.sp)
                                         }
                                     },
                                     onClick = {
@@ -294,7 +296,7 @@ fun RemoteScreen(
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             Icon(Icons.Default.Search, contentDescription = null, tint = AccentCyan, modifier = Modifier.size(16.dp))
                                             Spacer(modifier = Modifier.width(8.dp))
-                                            Text("Scan LAN Subnet...", color = AccentCyan, fontSize = 13.sp)
+                                            Text(stringResource(R.string.scan_lan_devices), color = AccentCyan, fontSize = 13.sp)
                                         }
                                     },
                                     onClick = {
@@ -315,7 +317,7 @@ fun RemoteScreen(
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             Icon(Icons.Default.Info, contentDescription = null, tint = AccentCyan, modifier = Modifier.size(16.dp))
                                             Spacer(modifier = Modifier.width(8.dp))
-                                            Text("About Casto & Support", color = Color.White, fontSize = 13.sp)
+                                            Text(stringResource(R.string.about_title), color = Color.White, fontSize = 13.sp)
                                         }
                                     },
                                     onClick = {
@@ -331,7 +333,7 @@ fun RemoteScreen(
                                             Row(verticalAlignment = Alignment.CenterVertically) {
                                                 Icon(Icons.Default.Close, contentDescription = null, tint = AccentRed, modifier = Modifier.size(16.dp))
                                                 Spacer(modifier = Modifier.width(8.dp))
-                                                Text("Disconnect", color = AccentRed, fontSize = 13.sp)
+                                                Text(stringResource(R.string.disconnect), color = AccentRed, fontSize = 13.sp)
                                             }
                                         },
                                         onClick = {
@@ -356,7 +358,7 @@ fun RemoteScreen(
                                 )
                             ) {
                                 Text(
-                                    if (connectionState is ConnectionState.Connecting) "Connecting..." else "Connect",
+                                    if (connectionState is ConnectionState.Connecting) stringResource(R.string.connecting) else stringResource(R.string.connect),
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.SemiBold
                                 )
@@ -378,7 +380,7 @@ fun RemoteScreen(
                         ) {
                             Icon(
                                 Icons.Default.Tv,
-                                contentDescription = "Screen Mirror Tab",
+                                contentDescription = stringResource(R.string.action_screen_mirror),
                                 tint = if (selectedTab == RemoteTab.SCREEN) AccentCyan else Color.White,
                                 modifier = Modifier.size(20.dp)
                             )
@@ -404,7 +406,7 @@ fun RemoteScreen(
                             if (isTakingScreenshot) {
                                 CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp, color = Color.White)
                             } else {
-                                Icon(Icons.Default.CameraAlt, contentDescription = "Take TV Screenshot", tint = Color.White, modifier = Modifier.size(20.dp))
+                                Icon(Icons.Default.CameraAlt, contentDescription = stringResource(R.string.action_screenshot), tint = Color.White, modifier = Modifier.size(20.dp))
                             }
                         }
 
@@ -416,7 +418,7 @@ fun RemoteScreen(
                             },
                             modifier = Modifier.size(36.dp)
                         ) {
-                            Icon(Icons.Default.Link, contentDescription = "Launch Link on TV", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.Link, contentDescription = stringResource(R.string.action_send_link), tint = Color.White, modifier = Modifier.size(20.dp))
                         }
 
                         // Settings Button (Moved next to Power!)
@@ -432,7 +434,7 @@ fun RemoteScreen(
                             },
                             modifier = Modifier.size(36.dp)
                         ) {
-                            Icon(Icons.Default.Settings, contentDescription = "TV Settings", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.action_tv_settings), tint = Color.White, modifier = Modifier.size(20.dp))
                         }
 
                         // Power Button with Pop-out Menu
@@ -443,7 +445,7 @@ fun RemoteScreen(
                             ) {
                                 Icon(
                                     Icons.Default.PowerSettingsNew,
-                                    contentDescription = "Power Options",
+                                    contentDescription = stringResource(R.string.action_power_menu),
                                     tint = AccentRed,
                                     modifier = Modifier.size(20.dp)
                                 )
@@ -455,7 +457,7 @@ fun RemoteScreen(
                                 modifier = Modifier.background(DarkSurfaceVariant)
                             ) {
                                 Text(
-                                    text = "Power Controls",
+                                    text = stringResource(R.string.power_controls),
                                     fontSize = 11.sp,
                                     color = TextSecondary,
                                     fontWeight = FontWeight.Bold,
@@ -469,8 +471,8 @@ fun RemoteScreen(
                                             Icon(Icons.Default.Brightness4, contentDescription = null, tint = AccentCyan, modifier = Modifier.size(18.dp))
                                             Spacer(modifier = Modifier.width(10.dp))
                                             Column {
-                                                Text(PowerAction.SLEEP.title, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
-                                                Text(PowerAction.SLEEP.subtitle, color = TextSecondary, fontSize = 10.sp)
+                                                Text(stringResource(PowerAction.SLEEP.titleRes), color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                                                Text(stringResource(PowerAction.SLEEP.subtitleRes), color = TextSecondary, fontSize = 10.sp)
                                             }
                                         }
                                     },
@@ -491,8 +493,8 @@ fun RemoteScreen(
                                             Icon(Icons.Default.RestartAlt, contentDescription = null, tint = AccentGreen, modifier = Modifier.size(18.dp))
                                             Spacer(modifier = Modifier.width(10.dp))
                                             Column {
-                                                Text(PowerAction.RESTART.title, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
-                                                Text(PowerAction.RESTART.subtitle, color = TextSecondary, fontSize = 10.sp)
+                                                Text(stringResource(PowerAction.RESTART.titleRes), color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                                                Text(stringResource(PowerAction.RESTART.subtitleRes), color = TextSecondary, fontSize = 10.sp)
                                             }
                                         }
                                     },
@@ -509,8 +511,8 @@ fun RemoteScreen(
                                             Icon(Icons.Default.Build, contentDescription = null, tint = Color(0xFFFFA726), modifier = Modifier.size(18.dp))
                                             Spacer(modifier = Modifier.width(10.dp))
                                             Column {
-                                                Text(PowerAction.RECOVERY.title, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
-                                                Text(PowerAction.RECOVERY.subtitle, color = TextSecondary, fontSize = 10.sp)
+                                                Text(stringResource(PowerAction.RECOVERY.titleRes), color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                                                Text(stringResource(PowerAction.RECOVERY.subtitleRes), color = TextSecondary, fontSize = 10.sp)
                                             }
                                         }
                                     },
@@ -527,8 +529,8 @@ fun RemoteScreen(
                                             Icon(Icons.Default.FlashOn, contentDescription = null, tint = Color(0xFFBA68C8), modifier = Modifier.size(18.dp))
                                             Spacer(modifier = Modifier.width(10.dp))
                                             Column {
-                                                Text(PowerAction.FASTBOOT.title, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
-                                                Text(PowerAction.FASTBOOT.subtitle, color = TextSecondary, fontSize = 10.sp)
+                                                Text(stringResource(PowerAction.FASTBOOT.titleRes), color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                                                Text(stringResource(PowerAction.FASTBOOT.subtitleRes), color = TextSecondary, fontSize = 10.sp)
                                             }
                                         }
                                     },
@@ -547,8 +549,8 @@ fun RemoteScreen(
                                             Icon(Icons.Default.PowerSettingsNew, contentDescription = null, tint = AccentRed, modifier = Modifier.size(18.dp))
                                             Spacer(modifier = Modifier.width(10.dp))
                                             Column {
-                                                Text(PowerAction.POWER_OFF.title, color = AccentRed, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
-                                                Text(PowerAction.POWER_OFF.subtitle, color = TextSecondary, fontSize = 10.sp)
+                                                Text(stringResource(PowerAction.POWER_OFF.titleRes), color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                                                Text(stringResource(PowerAction.POWER_OFF.subtitleRes), color = TextSecondary, fontSize = 10.sp)
                                             }
                                         }
                                     },
@@ -583,7 +585,7 @@ fun RemoteScreen(
                             onClick = { sendKey(TvKeys.BACK) },
                             modifier = Modifier.size(46.dp)
                         ) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White, modifier = Modifier.size(22.dp))
+                            Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.nav_back), tint = Color.White, modifier = Modifier.size(22.dp))
                         }
 
                         // Home
@@ -591,7 +593,7 @@ fun RemoteScreen(
                             onClick = { sendKey(TvKeys.HOME) },
                             modifier = Modifier.size(46.dp)
                         ) {
-                            Icon(Icons.Default.Home, contentDescription = "Home", tint = Color.White, modifier = Modifier.size(22.dp))
+                            Icon(Icons.Default.Home, contentDescription = stringResource(R.string.nav_home), tint = Color.White, modifier = Modifier.size(22.dp))
                         }
 
                         // App Switcher / Task Switcher (scrcpy Ctrl + S / KEYCODE_APP_SWITCH)
@@ -599,7 +601,7 @@ fun RemoteScreen(
                             onClick = { sendKey(TvKeys.APP_SWITCH) },
                             modifier = Modifier.size(46.dp)
                         ) {
-                            Icon(Icons.Default.FilterNone, contentDescription = "App Switcher", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.FilterNone, contentDescription = stringResource(R.string.nav_app_switch), tint = Color.White, modifier = Modifier.size(20.dp))
                         }
 
                         // Search / Submit
@@ -615,7 +617,7 @@ fun RemoteScreen(
                             },
                             modifier = Modifier.size(46.dp)
                         ) {
-                            Icon(Icons.Default.Search, contentDescription = "Search / Submit", tint = Color.White, modifier = Modifier.size(22.dp))
+                            Icon(Icons.Default.Search, contentDescription = stringResource(R.string.nav_search), tint = Color.White, modifier = Modifier.size(22.dp))
                         }
 
                         // Menu (Click for short press, Long-press for context menu)
@@ -643,7 +645,7 @@ fun RemoteScreen(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White, modifier = Modifier.size(22.dp))
+                            Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.nav_menu), tint = Color.White, modifier = Modifier.size(22.dp))
                         }
                     }
                 }
@@ -668,7 +670,7 @@ fun RemoteScreen(
                                     RemoteTab.FILES -> Icon(Icons.Default.Folder, contentDescription = null)
                                 }
                             },
-                            label = { Text(tab.title) },
+                            label = { Text(stringResource(tab.titleRes)) },
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = AccentCyan,
                                 selectedTextColor = AccentCyan,
@@ -1132,7 +1134,7 @@ fun RemoteScreen(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "${action.title}?",
+                        text = "${stringResource(action.titleRes)}?",
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 17.sp
@@ -1141,7 +1143,7 @@ fun RemoteScreen(
             },
             text = {
                 Text(
-                    text = "${action.subtitle}.\n\nTarget: ${targetIp.ifBlank { "Connected Device" }}\nAre you sure you want to proceed?",
+                    text = "${stringResource(action.subtitleRes)}.\n\nTarget: ${targetIp.ifBlank { "Connected Device" }}\n${stringResource(R.string.power_dialog_prompt)}",
                     color = TextSecondary,
                     fontSize = 13.sp
                 )
@@ -1161,7 +1163,7 @@ fun RemoteScreen(
                     )
                 ) {
                     Text(
-                        text = if (action == PowerAction.POWER_OFF) "Power Off" else "Restart",
+                        text = if (action == PowerAction.POWER_OFF) stringResource(R.string.power_dialog_confirm_off) else stringResource(R.string.power_dialog_confirm_restart),
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
@@ -1169,7 +1171,7 @@ fun RemoteScreen(
             },
             dismissButton = {
                 TextButton(onClick = { pendingPowerAction = null }) {
-                    Text("Cancel", color = TextSecondary)
+                    Text(stringResource(R.string.cancel), color = TextSecondary)
                 }
             }
         )

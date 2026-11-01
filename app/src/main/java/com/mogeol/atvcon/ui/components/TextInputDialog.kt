@@ -9,11 +9,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.mogeol.atvcon.R
 import com.mogeol.atvcon.ui.theme.AccentCyan
 import com.mogeol.atvcon.ui.theme.DarkSurface
 import com.mogeol.atvcon.ui.theme.TextSecondary
@@ -38,7 +40,7 @@ fun TextInputDialog(
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
                 Text(
-                    text = "Input Text to TV",
+                    text = stringResource(R.string.text_input_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -47,7 +49,7 @@ fun TextInputDialog(
                 Spacer(modifier = Modifier.height(6.dp))
 
                 Text(
-                    text = "Supports Chinese, English & symbols. 'Send & Search' triggers immediate search submission.",
+                    text = "Supports Chinese, English & symbols. 'Search / Submit' triggers immediate search submission on TV.",
                     color = TextSecondary,
                     fontSize = 12.sp
                 )
@@ -57,7 +59,7 @@ fun TextInputDialog(
                 OutlinedTextField(
                     value = text,
                     onValueChange = { text = it },
-                    placeholder = { Text("Enter search query or text...", color = TextSecondary) },
+                    placeholder = { Text(stringResource(R.string.text_input_hint), color = TextSecondary) },
                     singleLine = false,
                     maxLines = 4,
                     colors = OutlinedTextFieldDefaults.colors(
@@ -80,7 +82,7 @@ fun TextInputDialog(
                         onClick = onDismiss,
                         contentPadding = PaddingValues(horizontal = 8.dp)
                     ) {
-                        Text("Cancel", color = TextSecondary, fontSize = 12.sp)
+                        Text(stringResource(R.string.cancel), color = TextSecondary, fontSize = 12.sp)
                     }
 
                     Spacer(modifier = Modifier.weight(1f))
@@ -96,7 +98,7 @@ fun TextInputDialog(
                         contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
                     ) {
-                        Text("Paste", fontSize = 12.sp, maxLines = 1, softWrap = false)
+                        Text(stringResource(R.string.text_input_send), fontSize = 12.sp, maxLines = 1, softWrap = false)
                     }
 
                     Button(
@@ -115,7 +117,7 @@ fun TextInputDialog(
                     ) {
                         Icon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Send & Search", fontWeight = FontWeight.Bold, fontSize = 12.sp, maxLines = 1, softWrap = false)
+                        Text(stringResource(R.string.nav_search), fontWeight = FontWeight.Bold, fontSize = 12.sp, maxLines = 1, softWrap = false)
                     }
                 }
             }

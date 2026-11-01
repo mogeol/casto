@@ -14,7 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.mogeol.atvcon.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mogeol.atvcon.data.MirrorQuality
@@ -38,7 +42,7 @@ fun QualitySettingsDialog(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Icon(Icons.Default.Tune, contentDescription = null, tint = AccentCyan, modifier = Modifier.size(24.dp))
-                Text("Mirror Quality & Bandwidth", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.scrcpy_quality_settings), color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
         },
         text = {
@@ -50,7 +54,7 @@ fun QualitySettingsDialog(
             ) {
                 // 1. Resolution
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("Maximum Resolution", color = TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.scrcpy_resolution), color = TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -90,7 +94,7 @@ fun QualitySettingsDialog(
 
                 // 2. Video Bitrate
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("Video Bitrate (Bandwidth)", color = TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.scrcpy_bitrate), color = TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -131,7 +135,7 @@ fun QualitySettingsDialog(
 
                 // 3. Max Framerate
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("Target Framerate", color = TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.scrcpy_framerate), color = TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -209,12 +213,12 @@ fun QualitySettingsDialog(
                 colors = ButtonDefaults.buttonColors(containerColor = AccentCyan, contentColor = Color.Black),
                 shape = RoundedCornerShape(10.dp)
             ) {
-                Text("Apply & Reconnect", fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.scrcpy_apply_reconnect), fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = TextSecondary)
+                Text(stringResource(R.string.cancel), color = TextSecondary)
             }
         },
         containerColor = DarkSurface,

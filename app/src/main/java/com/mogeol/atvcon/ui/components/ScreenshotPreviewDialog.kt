@@ -29,12 +29,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.FileProvider
+import com.mogeol.atvcon.R
 import com.mogeol.atvcon.ui.theme.AccentCyan
 import com.mogeol.atvcon.ui.theme.DarkBackground
 import com.mogeol.atvcon.ui.theme.DarkSurface
@@ -95,7 +97,7 @@ fun ScreenshotPreviewDialog(
                 ) {
                     Column {
                         Text(
-                            text = "TV Screenshot",
+                            text = stringResource(R.string.screenshot_preview_title),
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
                             color = Color.White
@@ -108,7 +110,7 @@ fun ScreenshotPreviewDialog(
                     }
 
                     IconButton(onClick = onDismiss) {
-                        Icon(Icons.Default.Close, contentDescription = "Close", tint = TextSecondary)
+                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.close), tint = TextSecondary)
                     }
                 }
 
@@ -160,7 +162,7 @@ fun ScreenshotPreviewDialog(
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Save to Photos", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                        Text(stringResource(R.string.screenshot_save_gallery), fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                     }
 
                     // Share
@@ -178,7 +180,7 @@ fun ScreenshotPreviewDialog(
                             tint = Color.White
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Share", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                        Text(stringResource(R.string.screenshot_share), fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                     }
                 }
             }

@@ -16,10 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mogeol.atvcon.R
 import com.mogeol.atvcon.data.TvApp
 import com.mogeol.atvcon.ui.theme.AccentCyan
 import com.mogeol.atvcon.ui.theme.AccentRed
@@ -63,7 +65,7 @@ fun AppLauncherSheet(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Installed TV Apps (${apps.size})",
+                text = "${stringResource(R.string.apps_title)} (${apps.size})",
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 color = Color.White
@@ -79,7 +81,7 @@ fun AppLauncherSheet(
                 } else {
                     Icon(
                         imageVector = Icons.Default.Refresh,
-                        contentDescription = "Refresh Apps",
+                        contentDescription = stringResource(R.string.apps_refresh),
                         tint = AccentCyan
                     )
                 }
@@ -107,19 +109,19 @@ fun AppLauncherSheet(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Link,
-                        contentDescription = "Launch Link",
+                        contentDescription = stringResource(R.string.apps_launch_link),
                         tint = AccentCyan,
                         modifier = Modifier.size(20.dp)
                     )
                     Column {
                         Text(
-                            text = "Launch Link / Intent",
+                            text = stringResource(R.string.apps_launch_link),
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 13.sp,
                             color = Color.White
                         )
                         Text(
-                            text = "Open URL remotely via default TV app",
+                            text = stringResource(R.string.apps_launch_link_subtitle),
                             fontSize = 11.sp,
                             color = TextSecondary
                         )
@@ -141,14 +143,14 @@ fun AppLauncherSheet(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
                 singleLine = true,
-                placeholder = { Text("Filter apps by name...", fontSize = 12.sp, color = TextSecondary) },
+                placeholder = { Text(stringResource(R.string.apps_search_hint), fontSize = 12.sp, color = TextSecondary) },
                 leadingIcon = {
                     Icon(Icons.Default.Search, contentDescription = null, tint = TextSecondary, modifier = Modifier.size(18.dp))
                 },
                 trailingIcon = {
                     if (searchQuery.isNotEmpty()) {
                         IconButton(onClick = { searchQuery = "" }, modifier = Modifier.size(20.dp)) {
-                            Icon(Icons.Default.Close, contentDescription = "Clear", tint = TextSecondary, modifier = Modifier.size(14.dp))
+                            Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cancel), tint = TextSecondary, modifier = Modifier.size(14.dp))
                         }
                     }
                 },
@@ -174,7 +176,7 @@ fun AppLauncherSheet(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = if (apps.isEmpty()) "No third-party apps found.\nTap refresh to reload." else "No apps match \"$searchQuery\"",
+                    text = if (apps.isEmpty()) stringResource(R.string.apps_no_results) else "${stringResource(R.string.apps_no_results)}: \"$searchQuery\"",
                     color = TextSecondary,
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
@@ -243,7 +245,7 @@ fun AppLauncherSheet(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Close,
-                                    contentDescription = "Force Stop",
+                                    contentDescription = stringResource(R.string.apps_force_stop),
                                     tint = AccentRed.copy(alpha = 0.6f),
                                     modifier = Modifier.size(15.dp)
                                 )

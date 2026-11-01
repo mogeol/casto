@@ -16,10 +16,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.mogeol.atvcon.R
 import com.mogeol.atvcon.ui.theme.AccentCyan
 import com.mogeol.atvcon.ui.theme.DarkSurface
 import com.mogeol.atvcon.ui.theme.DarkSurfaceVariant
@@ -60,7 +62,7 @@ fun SendLinkDialog(
                         modifier = Modifier.size(26.dp)
                     )
                     Text(
-                        text = "Launch Link on TV",
+                        text = stringResource(R.string.send_link_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -83,8 +85,8 @@ fun SendLinkDialog(
                 OutlinedTextField(
                     value = urlText,
                     onValueChange = { urlText = it },
-                    label = { Text("URL or Deep Link", fontSize = 12.sp) },
-                    placeholder = { Text("https://www.youtube.com/watch?v=...", color = TextSecondary, fontSize = 12.sp) },
+                    label = { Text("URL", fontSize = 12.sp) },
+                    placeholder = { Text(stringResource(R.string.send_link_hint), color = TextSecondary, fontSize = 12.sp) },
                     singleLine = false,
                     maxLines = 3,
                     trailingIcon = {
@@ -129,7 +131,7 @@ fun SendLinkDialog(
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Paste from Clipboard", color = AccentCyan, fontSize = 12.sp)
+                        Text(stringResource(R.string.send_link_paste), color = AccentCyan, fontSize = 12.sp)
                     }
                 }
 
@@ -137,7 +139,7 @@ fun SendLinkDialog(
 
                 // Quick Presets
                 Text(
-                    text = "Quick Presets:",
+                    text = stringResource(R.string.send_link_presets),
                     color = TextSecondary,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold
@@ -182,7 +184,7 @@ fun SendLinkDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextButton(onClick = onDismiss) {
-                        Text("Cancel", color = TextSecondary)
+                        Text(stringResource(R.string.cancel), color = TextSecondary)
                     }
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -206,7 +208,7 @@ fun SendLinkDialog(
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Launch on TV")
+                        Text(stringResource(R.string.send_link_launch))
                     }
                 }
             }

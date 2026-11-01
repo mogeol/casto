@@ -26,11 +26,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
+import com.mogeol.atvcon.R
 import com.mogeol.atvcon.adb.TvRemoteManager
 import com.mogeol.atvcon.data.TvFileItem
 import com.mogeol.atvcon.ui.theme.*
@@ -119,7 +121,7 @@ fun FileBrowserSheet(
                 containerColor = AccentCyan,
                 contentColor = Color.Black,
                 icon = { Icon(Icons.Default.UploadFile, contentDescription = null) },
-                text = { Text("Upload to TV", fontWeight = FontWeight.Bold) }
+                text = { Text(stringResource(R.string.files_upload), fontWeight = FontWeight.Bold) }
             )
         },
         containerColor = DarkBackground,
@@ -241,7 +243,7 @@ fun FileBrowserSheet(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Directory is empty.\nTap + Upload to transfer files to TV.",
+                        text = stringResource(R.string.files_empty),
                         color = TextSecondary,
                         fontSize = 13.sp,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -336,7 +338,7 @@ fun FileBrowserSheet(
                             ) {
                                 Icon(Icons.Default.Download, contentDescription = null, tint = AccentCyan)
                                 Column {
-                                    Text("Pull to Phone", fontWeight = FontWeight.SemiBold, color = Color.White, fontSize = 13.sp)
+                                    Text(stringResource(R.string.files_download), fontWeight = FontWeight.SemiBold, color = Color.White, fontSize = 13.sp)
                                     Text("Download file to your local phone storage", fontSize = 11.sp, color = TextSecondary)
                                 }
                             }
@@ -372,8 +374,8 @@ fun FileBrowserSheet(
                             ) {
                                 Icon(Icons.Default.Android, contentDescription = null, tint = AccentGreen)
                                 Column {
-                                    Text("Install APK on TV", fontWeight = FontWeight.SemiBold, color = Color.White, fontSize = 13.sp)
-                                    Text("Direct 1-tap package installation on Android TV", fontSize = 11.sp, color = TextSecondary)
+                                    Text(stringResource(R.string.files_install_apk), fontWeight = FontWeight.SemiBold, color = Color.White, fontSize = 13.sp)
+                                    Text(stringResource(R.string.files_install_apk_subtitle), fontSize = 11.sp, color = TextSecondary)
                                 }
                             }
                         }
@@ -405,8 +407,8 @@ fun FileBrowserSheet(
                             ) {
                                 Icon(Icons.Default.Launch, contentDescription = null, tint = Color.White)
                                 Column {
-                                    Text("Open on TV", fontWeight = FontWeight.SemiBold, color = Color.White, fontSize = 13.sp)
-                                    Text("Trigger TV default player or viewer for this file", fontSize = 11.sp, color = TextSecondary)
+                                    Text(stringResource(R.string.files_open_on_tv), fontWeight = FontWeight.SemiBold, color = Color.White, fontSize = 13.sp)
+                                    Text(stringResource(R.string.files_open_on_tv_subtitle), fontSize = 11.sp, color = TextSecondary)
                                 }
                             }
                         }
@@ -438,8 +440,8 @@ fun FileBrowserSheet(
                         ) {
                             Icon(Icons.Default.Delete, contentDescription = null, tint = AccentRed)
                             Column {
-                                Text("Delete from TV", fontWeight = FontWeight.SemiBold, color = AccentRed, fontSize = 13.sp)
-                                Text("Permanently delete file or directory from TV storage", fontSize = 11.sp, color = TextSecondary)
+                                Text(stringResource(R.string.files_delete), fontWeight = FontWeight.SemiBold, color = AccentRed, fontSize = 13.sp)
+                                Text(stringResource(R.string.files_delete_subtitle), fontSize = 11.sp, color = TextSecondary)
                             }
                         }
                     }
@@ -448,7 +450,7 @@ fun FileBrowserSheet(
             confirmButton = {},
             dismissButton = {
                 TextButton(onClick = { selectedFileItem = null }) {
-                    Text("Close")
+                    Text(stringResource(R.string.close))
                 }
             }
         )

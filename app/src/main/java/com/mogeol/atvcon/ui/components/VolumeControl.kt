@@ -17,9 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mogeol.atvcon.R
 import com.mogeol.atvcon.data.TvKeys
 import com.mogeol.atvcon.ui.theme.AccentCyan
 import com.mogeol.atvcon.ui.theme.DarkSurfaceVariant
@@ -144,7 +146,7 @@ fun VolumeControl(
                         )
                     }
                     Text(
-                        text = "CH",
+                        text = stringResource(R.string.nav_ch),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = AccentCyan
@@ -196,7 +198,7 @@ fun VolumeControl(
                         )
                     }
                     Text(
-                        text = "VOL",
+                        text = stringResource(R.string.nav_vol),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = TextSecondary

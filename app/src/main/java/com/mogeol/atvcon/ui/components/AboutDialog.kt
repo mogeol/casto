@@ -8,7 +8,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -22,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -101,7 +101,7 @@ fun AboutDialog(
                     ) {
                         Icon(
                             Icons.Default.Close,
-                            contentDescription = "Close",
+                            contentDescription = stringResource(R.string.close),
                             tint = TextSecondary,
                             modifier = Modifier.size(20.dp)
                         )
@@ -111,7 +111,7 @@ fun AboutDialog(
                 Spacer(modifier = Modifier.height(14.dp))
 
                 Text(
-                    text = "High-performance ADB remote & low-latency scrcpy screen mirror for Android TV and mobile devices.",
+                    text = stringResource(R.string.app_tagline),
                     color = TextSecondary,
                     fontSize = 12.sp,
                     lineHeight = 17.sp,
@@ -134,13 +134,13 @@ fun AboutDialog(
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             Icon(Icons.Default.Code, contentDescription = null, tint = AccentCyan, modifier = Modifier.size(16.dp))
-                            Text("Open Source (Apache 2.0)", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                            Text(stringResource(R.string.about_open_source), color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                         }
 
                         Spacer(modifier = Modifier.height(6.dp))
 
                         Text(
-                            text = "Powered by pure Kotlin ADB (dadb) and scrcpy-server. Fully open-source with zero trackers and zero ads.",
+                            text = stringResource(R.string.about_open_source_desc),
                             color = TextSecondary,
                             fontSize = 11.sp,
                             lineHeight = 15.sp
@@ -165,7 +165,7 @@ fun AboutDialog(
                         ) {
                             Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null, modifier = Modifier.size(14.dp))
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("View on GitHub", fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                            Text(stringResource(R.string.about_github_btn), fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
                         }
                     }
                 }
@@ -185,13 +185,13 @@ fun AboutDialog(
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             Icon(Icons.Default.Favorite, contentDescription = null, tint = Color(0xFFFF5252), modifier = Modifier.size(16.dp))
-                            Text("Support & Donations", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                            Text(stringResource(R.string.about_donation_title), color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                         }
 
                         Spacer(modifier = Modifier.height(6.dp))
 
                         Text(
-                            text = "Casto is developed as a passionate open-source project. If it makes your TV experience smoother, voluntary donations keep active development alive!",
+                            text = stringResource(R.string.about_donation_desc),
                             color = TextSecondary,
                             fontSize = 11.sp,
                             lineHeight = 15.sp
@@ -203,13 +203,11 @@ fun AboutDialog(
                         Button(
                             onClick = {
                                 runCatching {
-                                    // Try launching directly into Alipay app first
                                     val alipayIntent = Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.ALIPAY_SCHEME_URL)).apply {
                                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     }
                                     context.startActivity(alipayIntent)
                                 }.onFailure {
-                                    // Fallback to web link
                                     runCatching {
                                         val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.ALIPAY_QR_URL))
                                         context.startActivity(webIntent)
@@ -228,7 +226,7 @@ fun AboutDialog(
                         ) {
                             Icon(Icons.Default.AccountBalanceWallet, contentDescription = null, modifier = Modifier.size(15.dp))
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("支付宝支持 / Alipay", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.about_alipay_btn), fontSize = 11.sp, fontWeight = FontWeight.Bold)
                         }
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -248,7 +246,7 @@ fun AboutDialog(
                             ) {
                                 Icon(Icons.Default.QrCode2, contentDescription = null, modifier = Modifier.size(14.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("查看收款码", fontSize = 11.sp, fontWeight = FontWeight.Medium)
+                                Text(stringResource(R.string.about_alipay_qr_btn), fontSize = 11.sp, fontWeight = FontWeight.Medium)
                             }
 
                             // PayPal Button
@@ -269,7 +267,7 @@ fun AboutDialog(
                             ) {
                                 Icon(Icons.Default.Payment, contentDescription = null, modifier = Modifier.size(14.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("PayPal", fontSize = 11.sp, fontWeight = FontWeight.Medium)
+                                Text(stringResource(R.string.about_paypal_btn), fontSize = 11.sp, fontWeight = FontWeight.Medium)
                             }
                         }
                     }
@@ -300,7 +298,7 @@ fun AboutDialog(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "支付宝赞助",
+                            text = stringResource(R.string.about_alipay_modal_title),
                             color = Color(0xFF1677FF),
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp
@@ -309,7 +307,7 @@ fun AboutDialog(
                             onClick = { showQrPreview = false },
                             modifier = Modifier.size(28.dp)
                         ) {
-                            Icon(Icons.Default.Close, contentDescription = "Close", tint = Color.Gray, modifier = Modifier.size(18.dp))
+                            Icon(Icons.Default.Close, contentDescription = stringResource(R.string.close), tint = Color.Gray, modifier = Modifier.size(18.dp))
                         }
                     }
 
@@ -344,7 +342,7 @@ fun AboutDialog(
                         ),
                         modifier = Modifier.fillMaxWidth().height(36.dp)
                     ) {
-                        Text("跳转至支付宝 App", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.about_alipay_modal_jump), fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }

@@ -25,7 +25,9 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.mogeol.atvcon.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -291,7 +293,7 @@ fun ScreenMirrorTab(
                         ) {
                             Icon(
                                 Icons.Default.Tune,
-                                contentDescription = "Mirror Quality & Bandwidth",
+                                contentDescription = stringResource(R.string.scrcpy_quality_settings),
                                 tint = Color.White,
                                 modifier = Modifier.size(18.dp)
                             )
@@ -306,7 +308,7 @@ fun ScreenMirrorTab(
                         ) {
                             Icon(
                                 Icons.Default.Fullscreen,
-                                contentDescription = "Expand Fullscreen",
+                                contentDescription = stringResource(R.string.scrcpy_fullscreen),
                                 tint = AccentCyan,
                                 modifier = Modifier.size(20.dp)
                             )
@@ -334,42 +336,42 @@ fun ScreenMirrorTab(
                             onClick = { scrcpyClient.sendKeyCode(TvKeys.BACK) },
                             modifier = Modifier.size(40.dp)
                         ) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.nav_back), tint = Color.White, modifier = Modifier.size(20.dp))
                         }
 
                         IconButton(
                             onClick = { scrcpyClient.sendKeyCode(TvKeys.HOME) },
                             modifier = Modifier.size(40.dp)
                         ) {
-                            Icon(Icons.Default.Home, contentDescription = "Home", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.Home, contentDescription = stringResource(R.string.nav_home), tint = Color.White, modifier = Modifier.size(20.dp))
                         }
 
                         IconButton(
                             onClick = { scrcpyClient.sendKeyCode(TvKeys.APP_SWITCH) },
                             modifier = Modifier.size(40.dp)
                         ) {
-                            Icon(Icons.Default.FilterNone, contentDescription = "App Switcher", tint = Color.White, modifier = Modifier.size(19.dp))
+                            Icon(Icons.Default.FilterNone, contentDescription = stringResource(R.string.nav_app_switch), tint = Color.White, modifier = Modifier.size(19.dp))
                         }
 
                         IconButton(
                             onClick = { scrcpyClient.sendKeyCode(TvKeys.MENU) },
                             modifier = Modifier.size(40.dp)
                         ) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.nav_menu), tint = Color.White, modifier = Modifier.size(20.dp))
                         }
 
                         IconButton(
                             onClick = onOpenKeyboard,
                             modifier = Modifier.size(40.dp)
                         ) {
-                            Icon(Icons.Default.Keyboard, contentDescription = "Keyboard", tint = AccentCyan, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.Keyboard, contentDescription = stringResource(R.string.nav_keyboard), tint = AccentCyan, modifier = Modifier.size(20.dp))
                         }
 
                         IconButton(
                             onClick = { showQualityDialog = true },
                             modifier = Modifier.size(40.dp)
                         ) {
-                            Icon(Icons.Default.Tune, contentDescription = "Quality Settings", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.Tune, contentDescription = stringResource(R.string.scrcpy_quality_settings), tint = Color.White, modifier = Modifier.size(20.dp))
                         }
 
                         VerticalDivider(
@@ -384,7 +386,7 @@ fun ScreenMirrorTab(
                             onClick = { onToggleFullscreen(false) },
                             modifier = Modifier.size(40.dp)
                         ) {
-                            Icon(Icons.Default.FullscreenExit, contentDescription = "Exit Fullscreen", tint = AccentCyan, modifier = Modifier.size(22.dp))
+                            Icon(Icons.Default.FullscreenExit, contentDescription = stringResource(R.string.scrcpy_exit_fullscreen), tint = AccentCyan, modifier = Modifier.size(22.dp))
                         }
                     }
                 }
@@ -436,22 +438,22 @@ fun ScreenMirrorTab(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         IconButton(onClick = { onSendKey(TvKeys.BACK) }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.nav_back), tint = Color.White, modifier = Modifier.size(20.dp))
                         }
                         IconButton(onClick = { onSendKey(TvKeys.HOME) }) {
-                            Icon(Icons.Default.Home, contentDescription = "Home", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.Home, contentDescription = stringResource(R.string.nav_home), tint = Color.White, modifier = Modifier.size(20.dp))
                         }
                         IconButton(onClick = { onSendKey(TvKeys.APP_SWITCH) }) {
-                            Icon(Icons.Default.FilterNone, contentDescription = "App Switcher", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.FilterNone, contentDescription = stringResource(R.string.nav_app_switch), tint = Color.White, modifier = Modifier.size(20.dp))
                         }
                         IconButton(onClick = { onSendKey(TvKeys.MENU) }) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.nav_menu), tint = Color.White, modifier = Modifier.size(20.dp))
                         }
                         IconButton(onClick = onOpenKeyboard) {
-                            Icon(Icons.Default.Keyboard, contentDescription = "Keyboard", tint = AccentCyan, modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.Keyboard, contentDescription = stringResource(R.string.nav_keyboard), tint = AccentCyan, modifier = Modifier.size(20.dp))
                         }
                         IconButton(onClick = { onSendKey(TvKeys.VOLUME_MUTE) }) {
-                            Icon(Icons.AutoMirrored.Filled.VolumeMute, contentDescription = "Mute", tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(Icons.AutoMirrored.Filled.VolumeMute, contentDescription = stringResource(R.string.nav_mute), tint = Color.White, modifier = Modifier.size(20.dp))
                         }
                     }
                 }
@@ -489,7 +491,7 @@ fun ScreenMirrorTab(
                             ) {
                                 Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Next Track / CH +", tint = Color.White, modifier = Modifier.size(24.dp))
                             }
-                            Text("CH", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = TextSecondary)
+                            Text(stringResource(R.string.nav_ch), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = TextSecondary)
                             IconButton(
                                 onClick = {
                                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -533,7 +535,7 @@ fun ScreenMirrorTab(
                             ) {
                                 Icon(Icons.Default.Add, contentDescription = "Vol +", tint = Color.White, modifier = Modifier.size(24.dp))
                             }
-                            Text("VOL", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = TextSecondary)
+                            Text(stringResource(R.string.nav_vol), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = TextSecondary)
                             IconButton(
                                 onClick = {
                                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)

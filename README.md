@@ -71,6 +71,18 @@ Unlike traditional remotes that rely on cloud servers, infrared, or proprietary 
 - Scans local Wi-Fi subnet (`/24`) for devices with open ADB ports (`5555`).
 - One-tap device switching with auto-reconnect.
 
+### 🌐 8. Internationalization & Multi-Language Support
+- Automatically adapts to the operating system's display language (`Locale.getDefault()`), falling back to English if unmatched.
+- Supported languages:
+  - 🇺🇸 **English** (Default fallback)
+  - 🇨🇳 **Simplified Chinese** (简体中文)
+  - 🇹🇼 **Traditional Chinese** (繁體中文)
+  - 🇪🇸 **Spanish** (Español)
+  - 🇯🇵 **Japanese** (日本語)
+  - 🇷🇺 **Russian** (Русский)
+  - 🇩🇪 **German** (Deutsch)
+  - 🇫🇷 **French** (Français)
+
 ---
 
 ## 🚀 Getting Started

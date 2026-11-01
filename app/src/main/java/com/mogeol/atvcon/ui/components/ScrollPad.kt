@@ -22,10 +22,12 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mogeol.atvcon.R
 import com.mogeol.atvcon.ui.theme.AccentCyan
 import com.mogeol.atvcon.ui.theme.DarkSurfaceVariant
 import com.mogeol.atvcon.ui.theme.TextSecondary
@@ -159,7 +161,7 @@ fun ScrollPad(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "SCROLL",
+                        text = stringResource(R.string.nav_scroll),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         color = if (isDragging) AccentCyan else TextSecondary,

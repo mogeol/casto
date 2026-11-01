@@ -1,6 +1,8 @@
 package com.mogeol.atvcon.data
 
 import android.content.Context
+import androidx.annotation.StringRes
+import com.mogeol.atvcon.R
 import java.util.Locale
 
 sealed class ConnectionState {
@@ -42,11 +44,11 @@ data class TvFileItem(
         }
 }
 
-enum class RemoteTab(val title: String) {
-    REMOTE("Remote"),
-    SCREEN("Screen"),
-    APPS("Apps"),
-    FILES("Files")
+enum class RemoteTab(val title: String, @StringRes val titleRes: Int) {
+    REMOTE("Remote", R.string.tab_remote),
+    SCREEN("Screen", R.string.tab_screen),
+    APPS("Apps", R.string.tab_apps),
+    FILES("Files", R.string.tab_files)
 }
 
 data class MirrorQuality(
@@ -91,37 +93,49 @@ enum class PowerAction(
     val title: String,
     val subtitle: String,
     val command: String,
-    val isDestructive: Boolean
+    val isDestructive: Boolean,
+    @StringRes val titleRes: Int,
+    @StringRes val subtitleRes: Int
 ) {
     SLEEP(
         title = "Sleep / Standby",
         subtitle = "Toggle standby / screen power",
         command = "input keyevent 26",
-        isDestructive = false
+        isDestructive = false,
+        titleRes = R.string.power_sleep_title,
+        subtitleRes = R.string.power_sleep_subtitle
     ),
     RESTART(
         title = "Restart",
         subtitle = "Reboot system normally",
         command = "reboot",
-        isDestructive = true
+        isDestructive = true,
+        titleRes = R.string.power_restart_title,
+        subtitleRes = R.string.power_restart_subtitle
     ),
     RECOVERY(
         title = "Restart to Recovery",
         subtitle = "Reboot into recovery console",
         command = "reboot recovery",
-        isDestructive = true
+        isDestructive = true,
+        titleRes = R.string.power_recovery_title,
+        subtitleRes = R.string.power_recovery_subtitle
     ),
     FASTBOOT(
         title = "Restart to Fastboot",
         subtitle = "Reboot into bootloader / fastboot",
         command = "reboot bootloader",
-        isDestructive = true
+        isDestructive = true,
+        titleRes = R.string.power_fastboot_title,
+        subtitleRes = R.string.power_fastboot_subtitle
     ),
     POWER_OFF(
         title = "Power Off",
         subtitle = "Shut down device completely",
         command = "reboot -p",
-        isDestructive = true
+        isDestructive = true,
+        titleRes = R.string.power_off_title,
+        subtitleRes = R.string.power_off_subtitle
     )
 }
 
