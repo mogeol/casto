@@ -1,0 +1,42 @@
+# Built application files
+*.apk
+*.aar
+*.aab
+
+# Keystores & Signing credentials (NEVER COMMIT TO PUBLIC REPO)
+*.jks
+*.keystore
+keystore.properties
+*.p8
+*.p12
+*.key
+*.pem
+
+# Local configuration
+local.properties
+
+# Gradle cache & build directories
+.gradle/
+build/
+app/build/
+
+# Android Studio / IntelliJ IDEA
+.idea/
+*.iml
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+
+# VS Code
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Design scratch assets
+icon_options/
+scratch/
+*.log
