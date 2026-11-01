@@ -164,6 +164,21 @@ fun RemoteScreen(
     var apps by remember { mutableStateOf<List<TvApp>>(emptyList()) }
     var isAppsLoading by remember { mutableStateOf(false) }
 
+    // Auto refresh apps when switching to Apps tab or reconnecting
+    LaunchedEffect(selectedTab, connectionState) {
+        if (selectedTab == RemoteTab.APPS && connectionState is ConnectionState.Connected) {
+            if (apps.isEmpty()) {
+                isAppsLoading = true
+                remoteManager.getInstalledApps()
+                    .onSuccess { apps = it }
+                    .onFailure {
+                        Toast.makeText(context, "Failed to load apps: ${it.message}", Toast.LENGTH_SHORT).show()
+                    }
+                isAppsLoading = false
+            }
+        }
+    }
+
     // Discovery state
     var isScanning by remember { mutableStateOf(false) }
     var discoveredIps by remember { mutableStateOf<List<String>>(emptyList()) }

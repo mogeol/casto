@@ -39,8 +39,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
+import androidx.documentfile.provider.DocumentFile
 import com.mogeol.atvcon.R
 import com.mogeol.atvcon.adb.TvRemoteManager
+import com.mogeol.atvcon.data.LocalFolderManager
 import com.mogeol.atvcon.data.TvFileItem
 import com.mogeol.atvcon.ui.theme.*
 import kotlinx.coroutines.Dispatchers
@@ -64,6 +66,10 @@ fun FileBrowserSheet(
     var transferStatus by remember { mutableStateOf<String?>(null) }
     var selectedFileItem by remember { mutableStateOf<TvFileItem?>(null) }
     var showApkInstallPrompt by remember { mutableStateOf<String?>(null) }
+
+    val folderManager = remember { LocalFolderManager(context) }
+    var currentLocalFolderPath by remember { mutableStateOf(folderManager.displayPath) }
+    var pendingDownloadFileItem by remember { mutableStateOf<TvFileItem?>(null) }
 
     val loadDirectory: (String) -> Unit = { path ->
         coroutineScope.launch {
@@ -119,6 +125,43 @@ fun FileBrowserSheet(
                     Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    // Local folder picker launcher for downloads
+    val folderPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocumentTree()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            folderManager.setFolder(uri)
+            currentLocalFolderPath = folderManager.displayPath
+            val pending = pendingDownloadFileItem
+            if (pending != null) {
+                pendingDownloadFileItem = null
+                coroutineScope.launch {
+                    transferStatus = "Downloading ${pending.name} from TV..."
+                    val tempCacheDir = File(context.cacheDir, "downloads").apply { mkdirs() }
+                    val tempCacheFile = File(tempCacheDir, pending.name)
+
+                    remoteManager.pullFile(pending.path, tempCacheFile).onSuccess { downloaded ->
+                        transferStatus = null
+                        val savedLocation = saveFileToLocalFolder(context, folderManager, downloaded, pending.name)
+                        val msg = if (savedLocation != null) {
+                            "Saved ${pending.name} to $savedLocation"
+                        } else {
+                            "Downloaded ${pending.name}"
+                        }
+                        Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+                    }.onFailure { err ->
+                        transferStatus = null
+                        Toast.makeText(context, "Download failed: ${err.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                Toast.makeText(context, "Download folder: ${folderManager.displayPath}", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            pendingDownloadFileItem = null
         }
     }
 
@@ -211,7 +254,52 @@ fun FileBrowserSheet(
                 }
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(6.dp))
+
+            // Local Download Destination Folder Bar
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = DarkSurfaceVariant.copy(alpha = 0.65f),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { folderPickerLauncher.launch(null) }
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp, vertical = 7.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(
+                            Icons.Default.FolderOpen,
+                            contentDescription = null,
+                            tint = AccentCyan,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Text(
+                            text = stringResource(R.string.files_local_save_to, currentLocalFolderPath),
+                            color = Color.LightGray,
+                            fontSize = 11.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    Text(
+                        text = stringResource(R.string.files_change_folder),
+                        color = AccentCyan,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Transfer Status Banner
             val status = transferStatus
@@ -316,6 +404,7 @@ fun FileBrowserSheet(
 
                     // Download / Save to phone
                     if (!selectedItem.isDirectory) {
+                        // 1. Download to configured folder
                         Surface(
                             shape = RoundedCornerShape(8.dp),
                             color = DarkSurfaceVariant,
@@ -331,7 +420,7 @@ fun FileBrowserSheet(
 
                                         remoteManager.pullFile(item.path, tempCacheFile).onSuccess { downloaded ->
                                             transferStatus = null
-                                            val savedLocation = saveFileToPhoneStorage(context, downloaded, item.name)
+                                            val savedLocation = saveFileToLocalFolder(context, folderManager, downloaded, item.name)
                                             val msg = if (savedLocation != null) {
                                                 "Saved ${item.name} to $savedLocation"
                                             } else {
@@ -353,12 +442,38 @@ fun FileBrowserSheet(
                                 Icon(Icons.Default.Download, contentDescription = null, tint = AccentCyan)
                                 Column {
                                     Text(stringResource(R.string.files_download), fontWeight = FontWeight.SemiBold, color = Color.White, fontSize = 13.sp)
-                                    Text(stringResource(R.string.files_download_subtitle), fontSize = 11.sp, color = TextSecondary)
+                                    Text(stringResource(R.string.files_local_save_to, currentLocalFolderPath), fontSize = 11.sp, color = TextSecondary)
                                 }
                             }
                         }
 
-                        // Share file to other apps (WeChat, etc.)
+                        // 2. Choose Folder & Download
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = DarkSurfaceVariant,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    val item = selectedItem
+                                    selectedFileItem = null
+                                    pendingDownloadFileItem = item
+                                    folderPickerLauncher.launch(null)
+                                }
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                Icon(Icons.Default.DriveFolderUpload, contentDescription = null, tint = AccentCyan)
+                                Column {
+                                    Text(stringResource(R.string.files_choose_folder_download), fontWeight = FontWeight.SemiBold, color = Color.White, fontSize = 13.sp)
+                                    Text(stringResource(R.string.files_choose_folder_subtitle), fontSize = 11.sp, color = TextSecondary)
+                                }
+                            }
+                        }
+
+                        // 3. Share file to other apps (WeChat, etc.)
                         Surface(
                             shape = RoundedCornerShape(8.dp),
                             color = DarkSurfaceVariant,
@@ -645,7 +760,12 @@ private fun getFileNameFromUri(context: Context, uri: Uri): String? {
     return name ?: uri.lastPathSegment
 }
 
-private suspend fun saveFileToPhoneStorage(context: Context, sourceFile: File, fileName: String): String? = withContext(Dispatchers.IO) {
+private suspend fun saveFileToLocalFolder(
+    context: Context,
+    folderManager: LocalFolderManager,
+    sourceFile: File,
+    fileName: String
+): String? = withContext(Dispatchers.IO) {
     try {
         val ext = sourceFile.extension.lowercase()
         val isImage = ext in listOf("png", "jpg", "jpeg", "webp", "gif", "bmp")
@@ -657,7 +777,29 @@ private suspend fun saveFileToPhoneStorage(context: Context, sourceFile: File, f
             "mp4" -> "video/mp4"
             "apk" -> "application/vnd.android.package-archive"
             "pdf" -> "application/pdf"
+            "txt" -> "text/plain"
             else -> "application/octet-stream"
+        }
+
+        val treeUri = folderManager.treeUri
+        if (treeUri != null) {
+            try {
+                val rootDoc = DocumentFile.fromTreeUri(context, treeUri)
+                if (rootDoc != null && rootDoc.canWrite()) {
+                    rootDoc.findFile(fileName)?.delete()
+                    val targetDoc = rootDoc.createFile(mimeType, fileName)
+                    if (targetDoc != null) {
+                        context.contentResolver.openOutputStream(targetDoc.uri)?.use { out ->
+                            sourceFile.inputStream().use { input ->
+                                input.copyTo(out)
+                            }
+                        }
+                        return@withContext folderManager.displayPath
+                    }
+                }
+            } catch (_: Exception) {
+                folderManager.resetToDefault()
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

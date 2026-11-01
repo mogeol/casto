@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License" />
   <img src="https://img.shields.io/badge/Platform-Android_7.0%2B-brightgreen.svg" alt="Android 7.0+" />
   <img src="https://img.shields.io/badge/Kotlin-1.9.24-purple.svg" alt="Kotlin" />
-  <img src="https://img.shields.io/badge/Version-v1.0.0-orange.svg" alt="Release" />
+  <img src="https://img.shields.io/badge/Version-v1.1.0-orange.svg" alt="Release" />
 </p>
 
 ---
@@ -53,25 +53,32 @@ Unlike traditional remotes that rely on cloud servers, infrared, or proprietary 
 - Browse internal storage (`/sdcard`, `Download`, `Movies`, `Pictures`).
 - **Push Files**: Upload local files, APKs, videos, or ROMs from phone to TV.
 - **Pull Files**: Download remote files from TV to phone storage.
+- **Custom Local Folder Destination**: Select any local destination directory using Android Storage Access Framework (SAF) with persistent permissions.
 - **1-Tap APK Sideload**: Install `.apk` packages on TV directly via `pm install -r -d -t`.
 
-### 📸 4. Instant Remote Screenshot Capture
+### 🚀 4. App Launcher & Management
+- List all installed TV apps with their native launchable activities and app icons.
+- Auto-refresh apps list upon opening the tab or connecting to a TV.
+- Pull-down-to-refresh gesture support.
+- 1-tap remote app launching and package termination.
+
+### 📸 5. Instant Remote Screenshot Capture
 - 1-tap TV screenshot capture from top bar (`screencap -p`).
 - Instant full-screen image preview dialog.
 - 1-tap **Save to Photos** (`MediaStore`) or **Share** to chat and cloud apps.
 
-### 🔗 5. Intent Link & Video Stream Launcher
+### 🔗 6. Intent Link & Video Stream Launcher
 - Remotely open web links, YouTube videos, and media streams (`.m3u8`, `.mp4`) on TV.
 - Android system share target: Share links from mobile browser or YouTube app directly to Casto to launch on TV.
 
-### ⌨️ 6. Full Unicode & Multi-Lingual Text Input
+### ⌨️ 7. Full Unicode & Multi-Lingual Text Input
 - Types Chinese, English, emoji, and complex text without character loss by synchronizing clipboard (`cmd clipboard set text`) and triggering paste (`KEYCODE_PASTE = 279`).
 
-### 🔍 7. LAN Auto-Discovery & Multi-Device History
+### 🔍 8. LAN Auto-Discovery & Multi-Device History
 - Scans local Wi-Fi subnet (`/24`) for devices with open ADB ports (`5555`).
 - One-tap device switching with auto-reconnect.
 
-### 🌐 8. Internationalization & Multi-Language Support
+### 🌐 9. Internationalization & Multi-Language Support
 - Automatically adapts to the operating system's display language (`Locale.getDefault()`), falling back to English if unmatched.
 - Supported languages:
   - 🇺🇸 **English** (Default fallback)

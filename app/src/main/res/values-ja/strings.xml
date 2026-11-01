@@ -115,4 +115,8 @@
     <string name="files_download_subtitle">端末のダウンロード／写真に直接保存</string>
     <string name="files_share">ファイルを共有</string>
     <string name="files_share_subtitle">WeChatなどのアプリで送信・共有</string>
+    <string name="files_local_save_to">保存先: %s</string>
+    <string name="files_change_folder">変更</string>
+    <string name="files_choose_folder_download">フォルダを選択して保存</string>
+    <string name="files_choose_folder_subtitle">端末の保存先フォルダを選択</string>
 </resources>

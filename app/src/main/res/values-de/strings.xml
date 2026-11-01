@@ -115,4 +115,8 @@
     <string name="files_download_subtitle">In Downloads / Bilder auf dem Telefon speichern</string>
     <string name="files_share">Datei teilen</string>
     <string name="files_share_subtitle">Über WeChat oder andere Apps teilen</string>
+    <string name="files_local_save_to">Speichern in: %s</string>
+    <string name="files_change_folder">Ändern</string>
+    <string name="files_choose_folder_download">Ordner wählen &amp; speichern</string>
+    <string name="files_choose_folder_subtitle">Zielordner auf dem Telefon auswählen</string>
 </resources>

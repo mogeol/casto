@@ -115,4 +115,8 @@
     <string name="files_download_subtitle">Save to phone\'s Download / Pictures storage</string>
     <string name="files_share">Share File</string>
     <string name="files_share_subtitle">Send or share via WeChat and other apps</string>
+    <string name="files_local_save_to">Save to: %s</string>
+    <string name="files_change_folder">Change</string>
+    <string name="files_choose_folder_download">Choose Folder &amp; Download</string>
+    <string name="files_choose_folder_subtitle">Browse and select local destination folder</string>
 </resources>

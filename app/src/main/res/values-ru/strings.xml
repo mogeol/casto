@@ -115,4 +115,8 @@
     <string name="files_download_subtitle">Сохранить в Загрузки / Фото на телефоне</string>
     <string name="files_share">Поделиться файлом</string>
     <string name="files_share_subtitle">Отправить через WeChat и другие приложения</string>
+    <string name="files_local_save_to">Сохранить в: %s</string>
+    <string name="files_change_folder">Изменить</string>
+    <string name="files_choose_folder_download">Выбрать папку и сохранить</string>
+    <string name="files_choose_folder_subtitle">Обзор и выбор папки назначения</string>
 </resources>

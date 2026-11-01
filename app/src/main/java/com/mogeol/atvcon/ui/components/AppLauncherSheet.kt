@@ -6,16 +6,21 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -28,6 +33,7 @@ import com.mogeol.atvcon.ui.theme.AccentRed
 import com.mogeol.atvcon.ui.theme.DarkSurfaceVariant
 import com.mogeol.atvcon.ui.theme.TextSecondary
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppLauncherSheet(
     apps: List<TvApp>,
@@ -39,6 +45,20 @@ fun AppLauncherSheet(
     modifier: Modifier = Modifier
 ) {
     var searchQuery by remember { mutableStateOf("") }
+
+    val pullRefreshState = rememberPullToRefreshState()
+    if (pullRefreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            onRefresh()
+        }
+    }
+    LaunchedEffect(isLoading) {
+        if (isLoading) {
+            pullRefreshState.startRefresh()
+        } else {
+            pullRefreshState.endRefresh()
+        }
+    }
 
     val filteredApps = remember(apps, searchQuery) {
         if (searchQuery.isBlank()) {
@@ -53,40 +73,45 @@ fun AppLauncherSheet(
         }
     }
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .nestedScroll(pullRefreshState.nestedScrollConnection)
     ) {
-        // Top Header
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            Text(
-                text = "${stringResource(R.string.apps_title)} (${apps.size})",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = Color.White
-            )
+            // Top Header
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "${stringResource(R.string.apps_title)} (${apps.size})",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = Color.White
+                )
 
-            IconButton(onClick = onRefresh, enabled = !isLoading) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(20.dp),
-                        strokeWidth = 2.dp,
-                        color = AccentCyan
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = stringResource(R.string.apps_refresh),
-                        tint = AccentCyan
-                    )
+                IconButton(onClick = onRefresh, enabled = !isLoading) {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            strokeWidth = 2.dp,
+                            color = AccentCyan
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = stringResource(R.string.apps_refresh),
+                            tint = AccentCyan
+                        )
+                    }
                 }
             }
-        }
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -172,7 +197,8 @@ fun AppLauncherSheet(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .weight(1f),
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState()),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -254,7 +280,15 @@ fun AppLauncherSheet(
                     }
                 }
             }
+            }
         }
+
+        PullToRefreshContainer(
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter),
+            containerColor = DarkSurfaceVariant,
+            contentColor = AccentCyan
+        )
     }
 }
 

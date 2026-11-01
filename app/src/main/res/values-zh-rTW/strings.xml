@@ -115,4 +115,8 @@
     <string name="files_download_subtitle">直接儲存到手機的下載或相簿目錄</string>
     <string name="files_share">分享檔案</string>
     <string name="files_share_subtitle">發送或分享到微信及其他應用</string>
+    <string name="files_local_save_to">儲存至：%s</string>
+    <string name="files_change_folder">變更</string>
+    <string name="files_choose_folder_download">選擇目錄並儲存</string>
+    <string name="files_choose_folder_subtitle">瀏覽並選擇手機上的儲存目錄</string>
 </resources>
