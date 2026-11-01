@@ -104,7 +104,7 @@
     <string name="about_title">Acerca de Casto</string>
     <string name="support_title">Apoyo y donación</string>
     <string name="support_subtitle">Apoyo al proyecto de código abierto</string>
-    <string name="about_support_btn">Apoyo y donación ❤️</string>
+    <string name="about_support_btn">Apoyar</string>
     <string name="about_author">Desarrollador: mogeol</string>
     <string name="about_open_source">Código abierto (Apache 2.0)</string>
     <string name="about_open_source_desc">Desarrollado con Kotlin ADB (dadb) y scrcpy-server. Código abierto, sin rastreo ni publicidad.</string>

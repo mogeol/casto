@@ -170,7 +170,7 @@ fun AboutDialog(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Developer & Credits Card
+                // Developer & Credits Card with inline Support Button
                 Surface(
                     shape = RoundedCornerShape(12.dp),
                     color = Color(0xFF222630),
@@ -180,13 +180,14 @@ fun AboutDialog(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 14.dp, vertical = 10.dp),
+                            .padding(horizontal = 14.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.weight(1f, fill = false)
                         ) {
                             Icon(Icons.Default.Person, contentDescription = null, tint = AccentCyan, modifier = Modifier.size(16.dp))
                             Text(
@@ -196,38 +197,8 @@ fun AboutDialog(
                                 fontWeight = FontWeight.Medium
                             )
                         }
-                    }
-                }
 
-                // Optional Shortcut to Support Dialog
-                if (onOpenSupport != null) {
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Surface(
-                        shape = RoundedCornerShape(12.dp),
-                        color = Color(0xFF252127),
-                        border = BorderStroke(1.dp, Color(0xFFFF5252).copy(alpha = 0.4f)),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Icon(Icons.Default.Favorite, contentDescription = null, tint = Color(0xFFFF5252), modifier = Modifier.size(18.dp))
-                                Column {
-                                    Text(stringResource(R.string.support_title), color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-                                    Text(stringResource(R.string.support_subtitle), color = TextSecondary, fontSize = 10.sp)
-                                }
-                            }
-
+                        if (onOpenSupport != null) {
                             Button(
                                 onClick = onOpenSupport,
                                 shape = RoundedCornerShape(8.dp),
@@ -235,10 +206,25 @@ fun AboutDialog(
                                     containerColor = Color(0xFFFF5252),
                                     contentColor = Color.White
                                 ),
-                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
-                                modifier = Modifier.height(30.dp)
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp),
+                                modifier = Modifier.height(28.dp)
                             ) {
-                                Text(stringResource(R.string.about_support_btn), fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Favorite,
+                                        contentDescription = null,
+                                        tint = Color.White,
+                                        modifier = Modifier.size(12.dp)
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.about_support_btn),
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
                             }
                         }
                     }

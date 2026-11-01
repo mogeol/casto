@@ -104,7 +104,7 @@
     <string name="about_title">關於 Casto</string>
     <string name="support_title">支持與贊助</string>
     <string name="support_subtitle">開源獨立開發支持</string>
-    <string name="about_support_btn">支持與贊助 ❤️</string>
+    <string name="about_support_btn">支持贊助</string>
     <string name="about_author">開發者：mogeol</string>
     <string name="about_open_source">開源協議 (Apache 2.0)</string>
     <string name="about_open_source_desc">基於純 Kotlin ADB (dadb) 與 scrcpy-server 建置。完全開源、零追蹤、無廣告。</string>

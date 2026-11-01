@@ -104,7 +104,7 @@
     <string name="about_title">Über Casto</string>
     <string name="support_title">Unterstützung &amp; Spenden</string>
     <string name="support_subtitle">Open-Source-Projektunterstützung</string>
-    <string name="about_support_btn">Unterstützung &amp; Spenden ❤️</string>
+    <string name="about_support_btn">Spenden</string>
     <string name="about_author">Entwickler: mogeol</string>
     <string name="about_open_source">Open Source (Apache 2.0)</string>
     <string name="about_open_source_desc">Mit reinem Kotlin ADB (dadb) und scrcpy-server entwickelt. Komplett Open Source, werbefrei und ohne Tracking.</string>
