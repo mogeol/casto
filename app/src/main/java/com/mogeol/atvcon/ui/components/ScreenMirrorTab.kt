@@ -1,5 +1,6 @@
 package com.mogeol.atvcon.ui.components
 
+import android.content.Context
 import android.graphics.SurfaceTexture
 import android.view.MotionEvent
 import android.view.Surface
@@ -7,9 +8,12 @@ import android.view.TextureView
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.*
@@ -19,8 +23,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -28,9 +34,11 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.mogeol.atvcon.R
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import kotlin.math.roundToInt
 import com.mogeol.atvcon.data.MirrorQuality
 import com.mogeol.atvcon.data.MirrorQualityManager
 import com.mogeol.atvcon.data.TvKeys
@@ -39,6 +47,13 @@ import com.mogeol.atvcon.scrcpy.ScrcpyProtocol
 import com.mogeol.atvcon.scrcpy.ScrcpyState
 import com.mogeol.atvcon.ui.theme.*
 import dadb.Dadb
+
+enum class ToolbarAnchor {
+    BOTTOM,
+    RIGHT,
+    TOP,
+    LEFT
+}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -65,6 +80,24 @@ fun ScreenMirrorTab(
     val qualityManager = remember { MirrorQualityManager(context) }
     var currentQuality by remember { mutableStateOf(qualityManager.quality) }
     var showQualityDialog by remember { mutableStateOf(false) }
+
+    // Fullscreen floating toolbar position and state preferences
+    val toolbarPrefs = remember { context.getSharedPreferences("fullscreen_toolbar_prefs", Context.MODE_PRIVATE) }
+    var toolbarAnchor by remember {
+        val saved = toolbarPrefs.getString("toolbar_anchor", ToolbarAnchor.BOTTOM.name)
+        mutableStateOf(runCatching { ToolbarAnchor.valueOf(saved ?: "") }.getOrDefault(ToolbarAnchor.BOTTOM))
+    }
+    var isToolbarMinimized by remember {
+        mutableStateOf(toolbarPrefs.getBoolean("toolbar_minimized", false))
+    }
+    var dragAccumulated by remember { mutableStateOf(Offset.Zero) }
+
+    LaunchedEffect(toolbarAnchor) {
+        toolbarPrefs.edit().putString("toolbar_anchor", toolbarAnchor.name).apply()
+    }
+    LaunchedEffect(isToolbarMinimized) {
+        toolbarPrefs.edit().putBoolean("toolbar_minimized", isToolbarMinimized).apply()
+    }
 
     // Double tap timing
     var lastTapTime by remember { mutableLongStateOf(0L) }
@@ -317,76 +350,300 @@ fun ScreenMirrorTab(
                 }
             }
 
-            // Floating Navigation Pill (only in fullscreen mode)
+            // Floating Navigation Toolbar (only in fullscreen mode)
             if (isFullscreen) {
-                Surface(
-                    shape = CircleShape,
-                    color = Color(0xDD181A20),
-                    shadowElevation = 8.dp,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 20.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                val anchorAlignment = when (toolbarAnchor) {
+                    ToolbarAnchor.BOTTOM -> Alignment.BottomCenter
+                    ToolbarAnchor.TOP -> Alignment.TopCenter
+                    ToolbarAnchor.LEFT -> Alignment.CenterStart
+                    ToolbarAnchor.RIGHT -> Alignment.CenterEnd
+                }
+                val anchorPadding = when (toolbarAnchor) {
+                    ToolbarAnchor.BOTTOM -> PaddingValues(bottom = 16.dp)
+                    ToolbarAnchor.TOP -> PaddingValues(top = 16.dp)
+                    ToolbarAnchor.LEFT -> PaddingValues(start = 10.dp)
+                    ToolbarAnchor.RIGHT -> PaddingValues(end = 10.dp)
+                }
+
+                if (isToolbarMinimized) {
+                    // Minimized Floating Pill/Bubble
+                    Surface(
+                        shape = CircleShape,
+                        color = Color(0xDD181A20),
+                        border = BorderStroke(1.dp, AccentCyan.copy(alpha = 0.5f)),
+                        shadowElevation = 8.dp,
+                        modifier = Modifier
+                            .align(anchorAlignment)
+                            .padding(anchorPadding)
+                            .offset { IntOffset(dragAccumulated.x.roundToInt(), dragAccumulated.y.roundToInt()) }
+                            .pointerInput(Unit) {
+                                detectDragGestures(
+                                    onDragStart = { dragAccumulated = Offset.Zero },
+                                    onDrag = { change, dragAmount ->
+                                        change.consume()
+                                        dragAccumulated += dragAmount
+                                    },
+                                    onDragEnd = {
+                                        val dx = dragAccumulated.x
+                                        val dy = dragAccumulated.y
+                                        val threshold = 35f
+                                        if (Math.abs(dx) > threshold || Math.abs(dy) > threshold) {
+                                            if (Math.abs(dx) > Math.abs(dy)) {
+                                                if (dx < -threshold) toolbarAnchor = ToolbarAnchor.LEFT
+                                                else if (dx > threshold) toolbarAnchor = ToolbarAnchor.RIGHT
+                                            } else {
+                                                if (dy < -threshold) toolbarAnchor = ToolbarAnchor.TOP
+                                                else if (dy > threshold) toolbarAnchor = ToolbarAnchor.BOTTOM
+                                            }
+                                        } else {
+                                            isToolbarMinimized = false
+                                        }
+                                        dragAccumulated = Offset.Zero
+                                    },
+                                    onDragCancel = { dragAccumulated = Offset.Zero }
+                                )
+                            }
                     ) {
                         IconButton(
-                            onClick = { scrcpyClient.sendKeyCode(TvKeys.BACK) },
-                            modifier = Modifier.size(40.dp)
+                            onClick = { isToolbarMinimized = false },
+                            modifier = Modifier.size(38.dp)
                         ) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.nav_back), tint = Color.White, modifier = Modifier.size(20.dp))
+                            Icon(
+                                imageVector = Icons.Default.UnfoldMore,
+                                contentDescription = stringResource(R.string.fullscreen_toolbar_restore),
+                                tint = AccentCyan,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    }
+                } else {
+                    // Full Expanded Toolbar
+                    Surface(
+                        shape = RoundedCornerShape(22.dp),
+                        color = Color(0xEE181A20),
+                        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.15f)),
+                        shadowElevation = 8.dp,
+                        modifier = Modifier
+                            .align(anchorAlignment)
+                            .padding(anchorPadding)
+                            .offset { IntOffset(dragAccumulated.x.roundToInt(), dragAccumulated.y.roundToInt()) }
+                    ) {
+                        val isVertical = toolbarAnchor == ToolbarAnchor.LEFT || toolbarAnchor == ToolbarAnchor.RIGHT
+                        val cycleNextAnchor: () -> Unit = {
+                            toolbarAnchor = when (toolbarAnchor) {
+                                ToolbarAnchor.BOTTOM -> ToolbarAnchor.RIGHT
+                                ToolbarAnchor.RIGHT -> ToolbarAnchor.TOP
+                                ToolbarAnchor.TOP -> ToolbarAnchor.LEFT
+                                ToolbarAnchor.LEFT -> ToolbarAnchor.BOTTOM
+                            }
                         }
 
-                        IconButton(
-                            onClick = { scrcpyClient.sendKeyCode(TvKeys.HOME) },
-                            modifier = Modifier.size(40.dp)
-                        ) {
-                            Icon(Icons.Default.Home, contentDescription = stringResource(R.string.nav_home), tint = Color.White, modifier = Modifier.size(20.dp))
-                        }
+                        if (isVertical) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(horizontal = 4.dp, vertical = 6.dp)
+                                    .verticalScroll(rememberScrollState()),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                // Drag handle
+                                Box(
+                                    modifier = Modifier
+                                        .size(32.dp)
+                                        .pointerInput(Unit) {
+                                            detectDragGestures(
+                                                onDragStart = { dragAccumulated = Offset.Zero },
+                                                onDrag = { change, dragAmount ->
+                                                    change.consume()
+                                                    dragAccumulated += dragAmount
+                                                },
+                                                onDragEnd = {
+                                                    val dx = dragAccumulated.x
+                                                    val dy = dragAccumulated.y
+                                                    val threshold = 40f
+                                                    if (Math.abs(dx) > Math.abs(dy)) {
+                                                        if (dx < -threshold) toolbarAnchor = ToolbarAnchor.LEFT
+                                                        else if (dx > threshold) toolbarAnchor = ToolbarAnchor.RIGHT
+                                                    } else {
+                                                        if (dy < -threshold) toolbarAnchor = ToolbarAnchor.TOP
+                                                        else if (dy > threshold) toolbarAnchor = ToolbarAnchor.BOTTOM
+                                                    }
+                                                    dragAccumulated = Offset.Zero
+                                                },
+                                                onDragCancel = { dragAccumulated = Offset.Zero }
+                                            )
+                                        },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.DragIndicator,
+                                        contentDescription = stringResource(R.string.fullscreen_toolbar_drag),
+                                        tint = TextSecondary,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
 
-                        IconButton(
-                            onClick = { scrcpyClient.sendKeyCode(TvKeys.APP_SWITCH) },
-                            modifier = Modifier.size(40.dp)
-                        ) {
-                            Icon(Icons.Default.FilterNone, contentDescription = stringResource(R.string.nav_app_switch), tint = Color.White, modifier = Modifier.size(19.dp))
-                        }
+                                // Minimize
+                                IconButton(
+                                    onClick = { isToolbarMinimized = true },
+                                    modifier = Modifier.size(32.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.UnfoldLess,
+                                        contentDescription = stringResource(R.string.fullscreen_toolbar_minimize),
+                                        tint = AccentCyan,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
 
-                        IconButton(
-                            onClick = { scrcpyClient.sendKeyCode(TvKeys.MENU) },
-                            modifier = Modifier.size(40.dp)
-                        ) {
-                            Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.nav_menu), tint = Color.White, modifier = Modifier.size(20.dp))
-                        }
+                                // Anchor / Dock switch
+                                IconButton(
+                                    onClick = cycleNextAnchor,
+                                    modifier = Modifier.size(32.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.OpenWith,
+                                        contentDescription = stringResource(R.string.fullscreen_toolbar_dock),
+                                        tint = Color.White,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
 
-                        IconButton(
-                            onClick = onOpenKeyboard,
-                            modifier = Modifier.size(40.dp)
-                        ) {
-                            Icon(Icons.Default.Keyboard, contentDescription = stringResource(R.string.nav_keyboard), tint = AccentCyan, modifier = Modifier.size(20.dp))
-                        }
+                                HorizontalDivider(
+                                    color = Color.DarkGray.copy(alpha = 0.6f),
+                                    modifier = Modifier.width(20.dp).padding(vertical = 2.dp)
+                                )
 
-                        IconButton(
-                            onClick = { showQualityDialog = true },
-                            modifier = Modifier.size(40.dp)
-                        ) {
-                            Icon(Icons.Default.Tune, contentDescription = stringResource(R.string.scrcpy_quality_settings), tint = Color.White, modifier = Modifier.size(20.dp))
-                        }
+                                IconButton(onClick = { scrcpyClient.sendKeyCode(TvKeys.BACK) }, modifier = Modifier.size(32.dp)) {
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.nav_back), tint = Color.White, modifier = Modifier.size(18.dp))
+                                }
+                                IconButton(onClick = { scrcpyClient.sendKeyCode(TvKeys.HOME) }, modifier = Modifier.size(32.dp)) {
+                                    Icon(Icons.Default.Home, contentDescription = stringResource(R.string.nav_home), tint = Color.White, modifier = Modifier.size(18.dp))
+                                }
+                                IconButton(onClick = { scrcpyClient.sendKeyCode(TvKeys.APP_SWITCH) }, modifier = Modifier.size(32.dp)) {
+                                    Icon(Icons.Default.FilterNone, contentDescription = stringResource(R.string.nav_app_switch), tint = Color.White, modifier = Modifier.size(17.dp))
+                                }
+                                IconButton(onClick = { scrcpyClient.sendKeyCode(TvKeys.MENU) }, modifier = Modifier.size(32.dp)) {
+                                    Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.nav_menu), tint = Color.White, modifier = Modifier.size(18.dp))
+                                }
+                                IconButton(onClick = onOpenKeyboard, modifier = Modifier.size(32.dp)) {
+                                    Icon(Icons.Default.Keyboard, contentDescription = stringResource(R.string.nav_keyboard), tint = AccentCyan, modifier = Modifier.size(18.dp))
+                                }
+                                IconButton(onClick = { showQualityDialog = true }, modifier = Modifier.size(32.dp)) {
+                                    Icon(Icons.Default.Tune, contentDescription = stringResource(R.string.scrcpy_quality_settings), tint = Color.White, modifier = Modifier.size(18.dp))
+                                }
 
-                        VerticalDivider(
-                            color = Color.DarkGray.copy(alpha = 0.6f),
-                            modifier = Modifier
-                                .height(22.dp)
-                                .padding(horizontal = 4.dp)
-                        )
+                                HorizontalDivider(
+                                    color = Color.DarkGray.copy(alpha = 0.6f),
+                                    modifier = Modifier.width(20.dp).padding(vertical = 2.dp)
+                                )
 
-                        // Collapse back to scaled-in mode
-                        IconButton(
-                            onClick = { onToggleFullscreen(false) },
-                            modifier = Modifier.size(40.dp)
-                        ) {
-                            Icon(Icons.Default.FullscreenExit, contentDescription = stringResource(R.string.scrcpy_exit_fullscreen), tint = AccentCyan, modifier = Modifier.size(22.dp))
+                                IconButton(onClick = { onToggleFullscreen(false) }, modifier = Modifier.size(32.dp)) {
+                                    Icon(Icons.Default.FullscreenExit, contentDescription = stringResource(R.string.scrcpy_exit_fullscreen), tint = AccentCyan, modifier = Modifier.size(20.dp))
+                                }
+                            }
+                        } else {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                // Drag handle
+                                Box(
+                                    modifier = Modifier
+                                        .size(32.dp)
+                                        .pointerInput(Unit) {
+                                            detectDragGestures(
+                                                onDragStart = { dragAccumulated = Offset.Zero },
+                                                onDrag = { change, dragAmount ->
+                                                    change.consume()
+                                                    dragAccumulated += dragAmount
+                                                },
+                                                onDragEnd = {
+                                                    val dx = dragAccumulated.x
+                                                    val dy = dragAccumulated.y
+                                                    val threshold = 40f
+                                                    if (Math.abs(dx) > Math.abs(dy)) {
+                                                        if (dx < -threshold) toolbarAnchor = ToolbarAnchor.LEFT
+                                                        else if (dx > threshold) toolbarAnchor = ToolbarAnchor.RIGHT
+                                                    } else {
+                                                        if (dy < -threshold) toolbarAnchor = ToolbarAnchor.TOP
+                                                        else if (dy > threshold) toolbarAnchor = ToolbarAnchor.BOTTOM
+                                                    }
+                                                    dragAccumulated = Offset.Zero
+                                                },
+                                                onDragCancel = { dragAccumulated = Offset.Zero }
+                                            )
+                                        },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.DragIndicator,
+                                        contentDescription = stringResource(R.string.fullscreen_toolbar_drag),
+                                        tint = TextSecondary,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+
+                                // Minimize
+                                IconButton(
+                                    onClick = { isToolbarMinimized = true },
+                                    modifier = Modifier.size(36.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.UnfoldLess,
+                                        contentDescription = stringResource(R.string.fullscreen_toolbar_minimize),
+                                        tint = AccentCyan,
+                                        modifier = Modifier.size(19.dp)
+                                    )
+                                }
+
+                                // Anchor / Dock switch
+                                IconButton(
+                                    onClick = cycleNextAnchor,
+                                    modifier = Modifier.size(36.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.OpenWith,
+                                        contentDescription = stringResource(R.string.fullscreen_toolbar_dock),
+                                        tint = Color.White,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+
+                                VerticalDivider(
+                                    color = Color.DarkGray.copy(alpha = 0.6f),
+                                    modifier = Modifier.height(20.dp).padding(horizontal = 2.dp)
+                                )
+
+                                IconButton(onClick = { scrcpyClient.sendKeyCode(TvKeys.BACK) }, modifier = Modifier.size(36.dp)) {
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.nav_back), tint = Color.White, modifier = Modifier.size(19.dp))
+                                }
+                                IconButton(onClick = { scrcpyClient.sendKeyCode(TvKeys.HOME) }, modifier = Modifier.size(36.dp)) {
+                                    Icon(Icons.Default.Home, contentDescription = stringResource(R.string.nav_home), tint = Color.White, modifier = Modifier.size(19.dp))
+                                }
+                                IconButton(onClick = { scrcpyClient.sendKeyCode(TvKeys.APP_SWITCH) }, modifier = Modifier.size(36.dp)) {
+                                    Icon(Icons.Default.FilterNone, contentDescription = stringResource(R.string.nav_app_switch), tint = Color.White, modifier = Modifier.size(18.dp))
+                                }
+                                IconButton(onClick = { scrcpyClient.sendKeyCode(TvKeys.MENU) }, modifier = Modifier.size(36.dp)) {
+                                    Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.nav_menu), tint = Color.White, modifier = Modifier.size(19.dp))
+                                }
+                                IconButton(onClick = onOpenKeyboard, modifier = Modifier.size(36.dp)) {
+                                    Icon(Icons.Default.Keyboard, contentDescription = stringResource(R.string.nav_keyboard), tint = AccentCyan, modifier = Modifier.size(19.dp))
+                                }
+                                IconButton(onClick = { showQualityDialog = true }, modifier = Modifier.size(36.dp)) {
+                                    Icon(Icons.Default.Tune, contentDescription = stringResource(R.string.scrcpy_quality_settings), tint = Color.White, modifier = Modifier.size(19.dp))
+                                }
+
+                                VerticalDivider(
+                                    color = Color.DarkGray.copy(alpha = 0.6f),
+                                    modifier = Modifier.height(20.dp).padding(horizontal = 2.dp)
+                                )
+
+                                IconButton(onClick = { onToggleFullscreen(false) }, modifier = Modifier.size(36.dp)) {
+                                    Icon(Icons.Default.FullscreenExit, contentDescription = stringResource(R.string.scrcpy_exit_fullscreen), tint = AccentCyan, modifier = Modifier.size(21.dp))
+                                }
+                            }
                         }
                     }
                 }

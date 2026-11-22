@@ -123,4 +123,8 @@
     <string name="files_change_folder">Modifier</string>
     <string name="files_choose_folder_download">Choisir un dossier et enregistrer</string>
     <string name="files_choose_folder_subtitle">Parcourir et sélectionner le dossier de destination</string>
+    <string name="fullscreen_toolbar_minimize">Réduire la barre</string>
+    <string name="fullscreen_toolbar_restore">Restaurer la barre</string>
+    <string name="fullscreen_toolbar_dock">Changer la position</string>
+    <string name="fullscreen_toolbar_drag">Faire glisser la barre</string>
 </resources>

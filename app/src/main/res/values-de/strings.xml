@@ -123,4 +123,8 @@
     <string name="files_change_folder">Ändern</string>
     <string name="files_choose_folder_download">Ordner wählen &amp; speichern</string>
     <string name="files_choose_folder_subtitle">Zielordner auf dem Telefon auswählen</string>
+    <string name="fullscreen_toolbar_minimize">Leiste minimieren</string>
+    <string name="fullscreen_toolbar_restore">Leiste wiederherstellen</string>
+    <string name="fullscreen_toolbar_dock">Position ändern</string>
+    <string name="fullscreen_toolbar_drag">Ziehen zum Bewegen</string>
 </resources>

@@ -123,4 +123,8 @@
     <string name="files_change_folder">變更</string>
     <string name="files_choose_folder_download">選擇目錄並儲存</string>
     <string name="files_choose_folder_subtitle">瀏覽並選擇手機上的儲存目錄</string>
+    <string name="fullscreen_toolbar_minimize">最小化工具列</string>
+    <string name="fullscreen_toolbar_restore">展開工具列</string>
+    <string name="fullscreen_toolbar_dock">切換停靠邊緣</string>
+    <string name="fullscreen_toolbar_drag">拖曳移動工具列</string>
 </resources>

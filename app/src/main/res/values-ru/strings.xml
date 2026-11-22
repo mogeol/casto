@@ -123,4 +123,8 @@
     <string name="files_change_folder">Изменить</string>
     <string name="files_choose_folder_download">Выбрать папку и сохранить</string>
     <string name="files_choose_folder_subtitle">Обзор и выбор папки назначения</string>
+    <string name="fullscreen_toolbar_minimize">Свернуть панель</string>
+    <string name="fullscreen_toolbar_restore">Развернуть панель</string>
+    <string name="fullscreen_toolbar_dock">Сменить положение</string>
+    <string name="fullscreen_toolbar_drag">Перетащить панель</string>
 </resources>

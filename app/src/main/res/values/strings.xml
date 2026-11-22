@@ -123,4 +123,8 @@
     <string name="files_change_folder">Change</string>
     <string name="files_choose_folder_download">Choose Folder &amp; Download</string>
     <string name="files_choose_folder_subtitle">Browse and select local destination folder</string>
+    <string name="fullscreen_toolbar_minimize">Minimize toolbar</string>
+    <string name="fullscreen_toolbar_restore">Restore toolbar</string>
+    <string name="fullscreen_toolbar_dock">Change dock position</string>
+    <string name="fullscreen_toolbar_drag">Drag to move toolbar</string>
 </resources>
